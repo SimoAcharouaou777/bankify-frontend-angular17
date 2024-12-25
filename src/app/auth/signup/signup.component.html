@@ -1,0 +1,96 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-blue-700">
+  <div class="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+    <div class="text-center mb-6">
+      <h2 class="text-2xl font-semibold text-gray-800">Create Your Account</h2>
+      <p class="text-sm text-gray-500">Join us securely</p>
+    </div>
+    <form (ngSubmit)="register()" class="space-y-6">
+
+      <!-- Username Field -->
+      <div>
+        <label for="username" class="block text-gray-700">Username</label>
+        <div class="mt-1 relative">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center">
+            <!-- User Icon -->
+            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 15c2.266 0 4.406.486 6.379 1.342M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </span>
+          <input
+            type="text"
+            id="username"
+            [(ngModel)]="username"
+            name="username"
+            required
+            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            placeholder="Enter your username"
+          />
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div>
+        <label for="password" class="block text-gray-700">Password</label>
+        <div class="mt-1 relative">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center">
+            <!-- Lock Icon -->
+            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c1.657 0 3-1.343 3-3V6a3 3 0 00-6 0v2c0 1.657 1.343 3 3 3z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17v-5a6 6 0 10-12 0v5h2v-5a4 4 0 118 0v5h2z" />
+            </svg>
+          </span>
+          <input
+            type="password"
+            id="password"
+            [(ngModel)]="password"
+            name="password"
+            required
+            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            placeholder="Enter your password"
+          />
+        </div>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div>
+        <label for="confirmPassword" class="block text-gray-700">Confirm Password</label>
+        <div class="mt-1 relative">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center">
+            <!-- Lock Icon -->
+            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c1.657 0 3-1.343 3-3V6a3 3 0 00-6 0v2c0 1.657 1.343 3 3 3z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17v-5a6 6 0 10-12 0v5h2v-5a4 4 0 118 0v5h2z" />
+            </svg>
+          </span>
+          <input
+            type="password"
+            id="confirmPassword"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            required
+            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            placeholder="Confirm your password"
+          />
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div>
+        <button
+          type="submit"
+          class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Sign Up
+        </button>
+      </div>
+    </form>
+
+    <!-- Login Link -->
+    <div class="mt-6 text-center">
+      <p class="text-sm text-gray-600">
+        Already have an account?
+        <a href="/login" class="text-blue-600 hover:text-blue-500 font-medium">Login</a>
+      </p>
+    </div>
+  </div>
+</div>
