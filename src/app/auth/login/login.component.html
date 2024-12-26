@@ -6,7 +6,10 @@
       <p class="text-sm text-gray-500">Secure your account with us</p>
     </div>
     <form (ngSubmit)="login()" class="space-y-6">
-      <!-- Username Field -->
+
+      <div *ngIf="successMessage" class="text-green-600">{{ successMessage }}</div>
+      <div *ngIf="errorMessage" class="text-red-600">{{ errorMessage }}</div>
+
       <div>
         <label for="username" class="block text-gray-700">Username</label>
         <div class="mt-1 relative">

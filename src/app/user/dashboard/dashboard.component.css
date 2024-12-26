@@ -1,0 +1,20 @@
+/* Example: Add scrollbar to transactions table if needed */
+table {
+    @apply w-full;
+}
+
+th, td {
+    @apply px-6 py-4;
+}
+
+th {
+    @apply bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+}
+
+tr:nth-child(even) {
+    @apply bg-white;
+}
+
+tr:hover {
+    @apply bg-gray-100;
+}

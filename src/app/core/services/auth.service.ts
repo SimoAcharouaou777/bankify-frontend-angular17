@@ -22,4 +22,15 @@ private apiUrl = '/api/auth'
     const body = { username, password};
     return this.http.post(`${this.apiUrl}/register`, body, { headers, responseType: 'json'});
   }
+
+  refreshToken(): Observable<any> {
+     const refreshToken = localStorage.getItem('refreshToken');
+     return this.http.post(`${this.apiUrl}/refresh-token`, { refreshToken });
+  }
+
+  logout() {
+     localStorage.removeItem('accessToken');
+     localStorage.removeItem('refreshToken');
+     localStorage.removeItem('role');
+  }
 }

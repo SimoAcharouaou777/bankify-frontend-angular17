@@ -6,6 +6,9 @@
     </div>
     <form (ngSubmit)="register()" class="space-y-6">
 
+      <div *ngIf="successMessage" class="text-green-600">{{ successMessage }}</div>
+      <div *ngIf="errorMessage" class="text-red-600">{{ errorMessage }}</div>
+
       <!-- Username Field -->
       <div>
         <label for="username" class="block text-gray-700">Username</label>

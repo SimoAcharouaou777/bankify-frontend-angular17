@@ -3,6 +3,7 @@ import {Router, RouterLink} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {AuthService} from "../../core/services/auth.service";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-signup',
@@ -10,7 +11,8 @@ import {AuthService} from "../../core/services/auth.service";
   imports: [
     RouterLink,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgIf
   ],
   templateUrl: './signup.component.html',
 })
@@ -29,24 +31,20 @@ export class SignupComponent {
 
       if(this.password !== this.confirmPassword){
         this.errorMessage = 'Passwords do not match';
-        console.error(this.errorMessage);
         return;
       }
       if(!this.username || !this.password || !this.confirmPassword){
         this.errorMessage = 'All fields are required';
-        console.error(this.errorMessage);
         return;
       }
       this.authService.register(this.username, this.password).subscribe({
         next: (response) => {
           this.successMessage = 'Registration successful';
-          alert(this.successMessage);
           this.router.navigate(['/login']);
         },
         error: (error) => {
           this.errorMessage = error.error.message || 'Registration failed';
-          console.error('Registration failed',error);
-          alert('Registration failed' + this.errorMessage);
+          console.error('Registration failed' + this.errorMessage);
         }
       });
     }
