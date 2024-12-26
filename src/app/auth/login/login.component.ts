@@ -29,11 +29,11 @@ export class LoginComponent {
           localStorage.setItem('role', response.role);
 
           if(response.role === 'ADMIN'){
-            this.router.navigate(['/admin-dashboard']);
+            this.router.navigate(['/admin/dashboard']);
           }else if (response.role === 'EMPLOYEE'){
-            this.router.navigate(['/employee-dashboard']);
+            this.router.navigate(['/employee/dashboard']);
           }else{
-            this.router.navigate(['/user-dashboard']);
+            this.router.navigate(['/user/dashboard']);
           }
         },
         error: (error) => {
