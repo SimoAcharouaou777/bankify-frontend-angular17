@@ -33,4 +33,8 @@ private apiUrl = '/api/auth'
      localStorage.removeItem('refreshToken');
      localStorage.removeItem('role');
   }
+
+  getToken(): string | null {
+    return localStorage.getItem('accessToken');
+  }
 }

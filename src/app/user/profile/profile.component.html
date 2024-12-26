@@ -1,1 +1,112 @@
-<p>profile works!</p>
+<!-- User Profile -->
+<div class="flex">
+  <app-sidebar></app-sidebar>
+  <div class="ml-64 p-6 bg-gray-100 min-h-screen">
+    <h2 class="text-3xl font-semibold mb-6">Your Profile</h2>
+
+    <!-- Profile Information -->
+    <div class="bg-white shadow rounded-lg p-6 mb-6">
+      <h3 class="text-xl font-medium mb-4">Profile Information</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">First Name</label>
+          <p class="mt-1 text-lg text-gray-900">{{ user.firstName }}</p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Last Name</label>
+          <p class="mt-1 text-lg text-gray-900">{{ user.lastName }}</p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Date of Birth</label>
+          <p class="mt-1 text-lg text-gray-900">{{ user.dateOfBirth | date }}</p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Age</label>
+          <p class="mt-1 text-lg text-gray-900">{{ user.age }}</p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Identity Number</label>
+          <p class="mt-1 text-lg text-gray-900">{{ user.identityNumber }}</p>
+        </div>
+      </div>
+      <button (click)="toggleEdit()" class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        Edit Profile
+      </button>
+    </div>
+
+    <!-- Edit Profile Form -->
+    <div *ngIf="isEditing" class="bg-white shadow rounded-lg p-6 mb-6">
+      <h3 class="text-xl font-medium mb-4">Edit Profile</h3>
+      <form (ngSubmit)="onSubmit()" #profileForm="ngForm">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">First Name</label>
+            <input
+              type="text"
+              name="firstName"
+              [(ngModel)]="profile.firstName"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Last Name</label>
+            <input
+              type="text"
+              name="lastName"
+              [(ngModel)]="profile.lastName"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Date of Birth</label>
+            <input
+              type="date"
+              name="dateOfBirth"
+              [(ngModel)]="profile.dateOfBirth"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Age</label>
+            <input
+              type="number"
+              name="age"
+              [(ngModel)]="profile.age"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Identity Number</label>
+            <input
+              type="text"
+              name="identityNumber"
+              [(ngModel)]="profile.identityNumber"
+              required
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            />
+          </div>
+        </div>
+        <div class="mt-6 flex space-x-4">
+          <button
+            type="submit"
+            [disabled]="profileForm.invalid"
+            class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          >
+            Save Changes
+          </button>
+          <button
+            type="button"
+            (click)="toggleEdit()"
+            class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
