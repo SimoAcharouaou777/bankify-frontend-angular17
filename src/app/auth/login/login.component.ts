@@ -34,19 +34,20 @@ export class LoginComponent {
 
       this.authService.login(this.username, this.password).subscribe({
         next: (response) => {
-          localStorage.setItem('accessToken', response.accessToken);
-          localStorage.setItem('refreshToken', response.refreshToken);
-          localStorage.setItem('role', response.role);
+          if(response && response.accessToken){
+            this.successMessage = 'Login successful';
+            this.errorMessage = '';
 
-          this.successMessage = 'Login successful';
-          this.errorMessage = '';
-
-          if(response.role === 'ROLE_ADMIN'){
-            this.router.navigate(['/admin/dashboard']);
-          }else if (response.role === 'ROLE_EMPLOYEE'){
-            this.router.navigate(['/employee/dashboard']);
-          }else{
-            this.router.navigate(['/user/dashboard']);
+            if(response.role === 'ROLE_ADMIN'){
+              this.router.navigate(['/admin/dashboard']);
+            }else if (response.role === 'ROLE_EMPLOYEE'){
+              this.router.navigate(['/employee/dashboard']);
+            } else{
+              this.router.navigate(['/user/dashboard']);
+            }
+          } else {
+            this.errorMessage = 'Login failed. Please check your credentials';
+            this.successMessage = '';
           }
         },
         error: (error) => {

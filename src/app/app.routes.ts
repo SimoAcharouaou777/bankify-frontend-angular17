@@ -3,20 +3,15 @@ import { LoginComponent} from "./auth/login/login.component";
 import { SignupComponent} from "./auth/signup/signup.component";
 import {NgModule} from "@angular/core";
 import {roleGuard} from "./core/guards/role.guard";
-import {DashboardComponent} from "./user/dashboard/dashboard.component";
-import {AccountsComponent} from "./user/accounts/accounts.component";
-import {TransactionsComponent} from "./user/transactions/transactions.component";
-import {ProfileComponent} from "./user/profile/profile.component";
-import {TransferComponent} from "./user/transfer/transfer.component";
-import {LoansComponent} from "./user/loans/loans.component";
-import {InvoicesComponent} from "./user/invoices/invoices.component";
-
+import {HomeComponent} from "./home/home.component";
+import {authGuard} from "./core/guards/auth.guard";
 
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent},
-  { path: 'signup', component: SignupComponent},
-  { path: '', redirectTo: '/login', pathMatch: 'full'},
+  { path: 'home', component: HomeComponent},
+  { path: 'login', component: LoginComponent, canActivate: [authGuard]},
+  { path: 'signup', component: SignupComponent, canActivate: [authGuard]},
+  { path: '', redirectTo: '/home', pathMatch: 'full'},
 
   {
     path: 'admin',
@@ -36,7 +31,7 @@ export const routes: Routes = [
     canActivate: [roleGuard],
     data: { expectedRole: 'USER' }
   },
-  { path: '**', redirectTo: '/login'}
+  { path: '**', redirectTo: '/home'}
 ];
 
 

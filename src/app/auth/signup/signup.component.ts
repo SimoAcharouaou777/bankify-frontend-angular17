@@ -39,8 +39,12 @@ export class SignupComponent {
       }
       this.authService.register(this.username, this.password).subscribe({
         next: (response) => {
-          this.successMessage = 'Registration successful';
-          this.router.navigate(['/login']);
+          if(response) {
+            this.successMessage = 'Registration successful';
+            this.router.navigate(['/login']);
+          } else {
+            this.errorMessage = 'Registration failed';
+          }
         },
         error: (error) => {
           this.errorMessage = error.error.message || 'Registration failed';
