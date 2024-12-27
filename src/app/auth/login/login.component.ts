@@ -41,9 +41,9 @@ export class LoginComponent {
           this.successMessage = 'Login successful';
           this.errorMessage = '';
 
-          if(response.role === 'ADMIN'){
+          if(response.role === 'ROLE_ADMIN'){
             this.router.navigate(['/admin/dashboard']);
-          }else if (response.role === 'EMPLOYEE'){
+          }else if (response.role === 'ROLE_EMPLOYEE'){
             this.router.navigate(['/employee/dashboard']);
           }else{
             this.router.navigate(['/user/dashboard']);

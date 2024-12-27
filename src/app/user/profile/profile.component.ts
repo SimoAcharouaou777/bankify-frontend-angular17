@@ -16,7 +16,7 @@ import {DatePipe, NgIf} from "@angular/common";
     NgIf
   ],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  styleUrls:[ './profile.component.css' ]
 })
 export class ProfileComponent implements OnInit{
   user: any = {};
@@ -30,44 +30,37 @@ export class ProfileComponent implements OnInit{
   }
 
   getUserProfile(): void {
-    const token = localStorage.getItem('accessToken');
-    if(token) {
-      this.http.get('/api/user/profile', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }).subscribe({
-        next: (data) => {
-          this.user = data;
-          this.profile = { ...data };
-        },
-        error: (error) => {
-          console.error('Error fetching user profile', error);
-        }
-      });
-    }
+    this.http.get('/api/user/profile').subscribe({
+      next: (data) => {
+        this.user = data;
+        this.profile = {...data};
+      },
+      error: (error) => {
+        console.error('Error loading user profile', error);
+      }
+    })
+
   }
 
   toggleEdit(): void {
     this.isEditing = !this.isEditing;
   }
   onSubmit(): void {
-    const token = localStorage.getItem('accessToken');
-    if(token) {
-      this.http.put('api/user/profile', this.profile, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }).subscribe({
-        next: (data) => {
-          this.user = data;
-          this.isEditing = false;
-        },
-        error: (error) => {
-          console.error('Error updating user profile', error);
-        }
-      });
-    }
+    const profileData = {
+      firstName: this.profile.firstName,
+      lastName: this.profile.lastName,
+      dateOfBirth: this.profile.dateOfBirth,
+      age: this.profile.age,
+      identityNumber: this.profile.identityNumber
+    };
+    this.http.put('/api/user/profile', profileData).subscribe({
+      next: (data) => {
+        this.user = data;
+        this.isEditing = false;
+      },
+      error: (error) => {
+        console.error('Error updating user profile', error);
+      }
+    });
   }
-
 }

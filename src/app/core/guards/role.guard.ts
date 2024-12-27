@@ -1,11 +1,12 @@
 import { CanActivateFn, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import {inject} from "@angular/core";
 
 export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const expectedRole = route.data['expectedRole'];
   const role = localStorage.getItem('role');
+  const router = inject(Router);
 
   if (role !== expectedRole) {
-    const router = new Router();
     router.navigate(['/login']);
     return false;
   }
