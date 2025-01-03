@@ -17,17 +17,30 @@ export interface AccountCreationDTO {
   dateOfBirth: string;
 }
 
+export interface TransactionRequest {
+  accountId: number;
+  amount: number;
+}
+
+export interface TransferRequest {
+  fromAccount: number;
+  toAccount: number;
+  amount: number;
+  transactionType: string;
+  frequency?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
 
-  private apiUrl = 'api/user/accounts';
+  private baseApiUrl = 'api/user/accounts';
 
   constructor(private http: HttpClient) { }
 
   getBankAccounts(page: number = 0, size: number = 10): Observable<BankAccount[]> {
-    const url = `${this.apiUrl}?page=${page}&size=${size}`;
+    const url = `${this.baseApiUrl}?page=${page}&size=${size}`;
     return this.http.get<BankAccount[]>(url, this.getAuthHeaders())
       .pipe(
         catchError(this.handleError)
@@ -35,15 +48,39 @@ export class AccountService {
   }
 
   createBankAccount(accountData: AccountCreationDTO): Observable<BankAccount> {
-    return this.http.post<BankAccount>(this.apiUrl, accountData, this.getAuthHeaders())
+    return this.http.post<BankAccount>(this.baseApiUrl, accountData, this.getAuthHeaders())
       .pipe(
         catchError(this.handleError)
       );
   }
 
   getBankAccountById(id: number): Observable<BankAccount> {
-    const url = `${this.apiUrl}/${id}`;
+    const url = `${this.baseApiUrl}/${id}`;
     return this.http.get<BankAccount>(url, this.getAuthHeaders())
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  depositMoney(transactionRequest: TransactionRequest): Observable<any> {
+    const url = '/api/user/deposit';
+    return this.http.post(url, transactionRequest, this.getAuthHeaders())
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  withdrawMoney(transactionRequest: TransactionRequest): Observable<any> {
+    const url = 'api/user/withdraw';
+    return this.http.post(url, transactionRequest, this.getAuthHeaders())
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  transferFunds(transferRequest: TransferRequest): Observable<any> {
+    const url = 'api/user/transfer';
+    return this.http.post(url, transferRequest, this.getAuthHeaders())
       .pipe(
         catchError(this.handleError)
       );

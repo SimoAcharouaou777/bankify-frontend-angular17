@@ -57,21 +57,37 @@
   <!-- Accounts Grid -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <!-- Account Card -->
-    <div *ngFor="let account of accounts" class="bg-white shadow rounded-lg p-6">
-      <h3 class="text-xl font-medium mb-2">{{ getAccountType(account.accountNumber) }}</h3>
-      <p class="text-gray-600 mb-4">Account Number: {{ account.accountNumber }}</p>
-      <p class="text-2xl font-bold text-green-600">\${{ account.balance.toLocaleString() }}</p>
-      <button [routerLink]="['/user/accounts', account.id]" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">View Details</button>
+    <div *ngFor="let account of accounts" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl shadow-lg p-6 transform transition duration-300 hover:scale-105">
+      <div class="flex justify-between items-center">
+        <!-- Bank Logo -->
+        <img ngSrc="assets/banklogo.jpeg" alt="Bank Logo" class="w-12 h-12" width="50" height="50">
+        <!-- Account Type Icon -->
+        <svg *ngIf="account.accountType === 'Checking'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <!-- Checking Account Icon -->
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-3.582 8-8 8H11c-4.418 0-8-3.582-8-8V7c0-4.418 3.582-8 8-8h2c4.418 0 8 3.582 8 8v5z" />
+        </svg>
+        <svg *ngIf="account.accountType === 'Savings'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <!-- Savings Account Icon -->
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6" />
+        </svg>
+      </div>
+
+      <div class="mt-6">
+        <h3 class="text-xl font-semibold">{{ getAccountType(account.accountNumber) }}</h3>
+        <p class="text-sm mt-1">Account Number: <span class="font-mono">{{maskAccountNumber((account.accountNumber))}}</span></p>
+        <p class="text-lg mt-2">Balance: \${{ account.balance.toLocaleString() }}</p>
+      </div>
+
     </div>
   </div>
 
   <!-- Pagination Controls -->
   <div class="flex justify-center mt-6">
-    <button (click)="goToPreviousPage()" [disabled]="currentPage === 0 || isLoading" class="px-4 py-2 bg-gray-300 rounded mr-2 hover:bg-gray-400">
+    <button (click)="goToPreviousPage()" [disabled]="currentPage === 0 || isLoading" class="px-4 py-2 bg-gray-300 rounded mr-2 hover:bg-gray-400 disabled:opacity-50">
       Previous
     </button>
     <span class="px-4 py-2">Page {{ currentPage + 1 }}</span>
-    <button (click)="goToNextPage()" [disabled]="!hasMore || isLoading" class="px-4 py-2 bg-gray-300 rounded ml-2 hover:bg-gray-400">
+    <button (click)="goToNextPage()" [disabled]="!hasMore || isLoading" class="px-4 py-2 bg-gray-300 rounded ml-2 hover:bg-gray-400 disabled:opacity-50">
       Next
     </button>
   </div>

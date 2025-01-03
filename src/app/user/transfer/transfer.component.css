@@ -1,0 +1,33 @@
+/* src/styles.css or src/app/user/transfer/transfer.component.css */
+
+/* Loader styling */
+.loader {
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+/* Animation for the spinner */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Ensure body has no margin and uses full width */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Adjust main content padding to account for fixed header and sidebar */
+.ml-64 {
+  margin-left: 16rem; /* 64 in Tailwind corresponds to 16rem */
+}
+
+.mt-16 {
+  margin-top: 4rem; /* 16 in Tailwind corresponds to 4rem */
+}

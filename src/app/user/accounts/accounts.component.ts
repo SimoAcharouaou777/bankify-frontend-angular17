@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {SidebarComponent} from "../sidebar/sidebar.component";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {AccountService, BankAccount, AccountCreationDTO} from "../../core/services/accounts/account.service";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {data} from "autoprefixer";
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {RouterLink} from "@angular/router";
@@ -16,7 +16,8 @@ import {RouterLink} from "@angular/router";
     ReactiveFormsModule,
     NgIf,
     NgForOf,
-    RouterLink
+    RouterLink,
+    NgOptimizedImage
   ],
   templateUrl: './accounts.component.html',
   styleUrl: './accounts.component.css'
@@ -114,5 +115,12 @@ export class AccountsComponent implements OnInit{
     } else {
       return 'Bank Account';
     }
+  }
+
+  maskAccountNumber(accountNumber: string): string {
+    const visibleDigits = 4;
+    const maskedSection = accountNumber.slice(0, -visibleDigits).replace(/\d/g, '*');
+    const visibleSection = accountNumber.slice(-visibleDigits);
+    return `${maskedSection}${visibleSection}`;
   }
 }

@@ -1,3 +1,158 @@
-<div class="flex">
-  <app-sidebar></app-sidebar>
+<!-- src/app/user/transfer/transfer.component.html -->
+
+<app-sidebar></app-sidebar>
+<div class="ml-64 p-6 mt-16 bg-gray-100 min-h-screen">
+
+  <h2 class="text-3xl font-semibold mb-6 text-center">Banking Operations</h2>
+
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+    {{ successMessage }}
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+    {{ errorMessage }}
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- Deposit Section -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <h3 class="text-2xl font-medium mb-4 text-green-600">Deposit Money</h3>
+      <form [formGroup]="depositForm" (ngSubmit)="onDeposit()">
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2">Account</label>
+          <select formControlName="accountId" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-green-300">
+            <option value="">Select Account</option>
+            <option *ngFor="let account of userAccounts" [value]="account.id">
+              {{ account.accountType }} - {{ account.accountNumber }} - \${{ account.balance.toLocaleString() }}
+            </option>
+          </select>
+          <div *ngIf="depositForm.get('accountId')?.invalid && depositForm.get('accountId')?.touched" class="text-red-500 text-sm mt-1">
+            Account is required.
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2">Amount</label>
+          <input type="number" formControlName="amount" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-green-300" placeholder="Enter Amount" />
+          <div *ngIf="depositForm.get('amount')?.invalid && depositForm.get('amount')?.touched" class="text-red-500 text-sm mt-1">
+            Amount is required and must be greater than zero.
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="isLoading" class="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition duration-200">
+          {{ isLoading ? 'Processing...' : 'Deposit' }}
+        </button>
+      </form>
+    </div>
+
+    <!-- Withdraw Section -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <h3 class="text-2xl font-medium mb-4 text-red-600">Withdraw Money</h3>
+      <form [formGroup]="withdrawForm" (ngSubmit)="onWithdraw()">
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2">Account</label>
+          <select formControlName="accountId" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-red-300">
+            <option value="">Select Account</option>
+            <option *ngFor="let account of userAccounts" [value]="account.id">
+              {{ account.accountType }} - {{ account.accountNumber }} - \${{ account.balance.toLocaleString() }}
+            </option>
+          </select>
+          <div *ngIf="withdrawForm.get('accountId')?.invalid && withdrawForm.get('accountId')?.touched" class="text-red-500 text-sm mt-1">
+            Account is required.
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2">Amount</label>
+          <input type="number" formControlName="amount" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-red-300" placeholder="Enter Amount" />
+          <div *ngIf="withdrawForm.get('amount')?.invalid && withdrawForm.get('amount')?.touched" class="text-red-500 text-sm mt-1">
+            Amount is required and must be greater than zero.
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="isLoading" class="w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition duration-200">
+          {{ isLoading ? 'Processing...' : 'Withdraw' }}
+        </button>
+      </form>
+    </div>
+
+    <!-- Transfer Section -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <h3 class="text-2xl font-medium mb-4 text-blue-600">Transfer Funds</h3>
+      <form [formGroup]="transferForm" (ngSubmit)="onTransfer()">
+        <!-- From Account Dropdown -->
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2">From Account</label>
+          <select formControlName="fromAccount" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300">
+            <option value="">Select From Account</option>
+            <option *ngFor="let account of userAccounts" [value]="account.id">
+              {{ account.accountType }} - {{ account.accountNumber }} - \${{ account.balance.toLocaleString() }}
+            </option>
+          </select>
+          <div *ngIf="transferForm.get('fromAccount')?.invalid && transferForm.get('fromAccount')?.touched" class="text-red-500 text-sm mt-1">
+            From Account is required.
+          </div>
+        </div>
+
+        <!-- To Account Dropdown -->
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2">To Account</label>
+          <select formControlName="toAccount" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300">
+            <option value="">Select To Account</option>
+            <option *ngFor="let account of userAccounts" [value]="account.id">
+              {{ account.accountType }} - {{ account.accountNumber }} - \${{ account.balance.toLocaleString() }}
+            </option>
+          </select>
+          <div *ngIf="transferForm.get('toAccount')?.invalid && transferForm.get('toAccount')?.touched" class="text-red-500 text-sm mt-1">
+            To Account is required.
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2">Amount</label>
+          <input type="number" formControlName="amount" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300" placeholder="Enter Amount" />
+          <div *ngIf="transferForm.get('amount')?.invalid && transferForm.get('amount')?.touched" class="text-red-500 text-sm mt-1">
+            Amount is required and must be greater than zero.
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-2">Transaction Type</label>
+          <select formControlName="transactionType" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300">
+            <option value="ONE_TIME">One-Time Transfer</option>
+            <option value="PERMANENT">Permanent Transfer</option>
+          </select>
+        </div>
+
+        <!-- Frequency Field (Shown Only for Permanent Transfers) -->
+        <div class="mb-4" *ngIf="transferForm.value.transactionType === 'PERMANENT'">
+          <label class="block text-gray-700 mb-2">Frequency</label>
+          <select formControlName="frequency" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300">
+            <option value="">Select Frequency</option>
+            <option value="Daily">Daily</option>
+            <option value="Weekly">Weekly</option>
+            <option value="Monthly">Monthly</option>
+            <option value="Yearly">Yearly</option>
+          </select>
+          <div *ngIf="transferForm.value.transactionType === 'PERMANENT' && !transferForm.value.frequency" class="text-red-500 text-sm mt-1">
+            Frequency is required for permanent transfers.
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="isLoading" class="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200">
+          {{ isLoading ? 'Processing...' : 'Transfer' }}
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="flex justify-center mt-6">
+    <div class="loader"></div>
+  </div>
+
 </div>
