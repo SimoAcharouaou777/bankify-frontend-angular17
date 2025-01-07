@@ -1,3 +1,101 @@
-<div class="flex">
+<!-- transactions.component.html (Revised Design) -->
+
   <app-sidebar></app-sidebar>
-</div>
+
+  <!-- Main Content Container -->
+  <div class="ml-64 p-6 mt-16 bg-gray-100 min-h-screen">
+
+    <h2 class="text-3xl font-semibold mb-6">My Transaction History</h2>
+
+    <!-- Outer Card -->
+    <div class="bg-white shadow rounded-lg p-6">
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Loading Spinner -->
+      <div *ngIf="isLoading" class="flex justify-center mt-4">
+        <div class="loader"></div>
+      </div>
+
+      <!-- Transactions Table -->
+      <table
+        class="min-w-full divide-y divide-gray-200"
+        *ngIf="!isLoading && transactions.length > 0"
+      >
+        <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Other Party</th>
+        </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+        <tr *ngFor="let tx of transactions">
+          <td class="px-6 py-4 whitespace-nowrap">{{ tx.date | date:'short' }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ tx.amount + " DH"}}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ tx.type }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <!-- Example: style statuses with colored badges -->
+            <span
+              *ngIf="tx.status === 'APPROVED'"
+              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+            >
+                {{ tx.status }}
+              </span>
+            <span
+              *ngIf="tx.status === 'PENDING'"
+              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"
+            >
+                {{ tx.status }}
+              </span>
+            <span
+              *ngIf="tx.status !== 'APPROVED' && tx.status !== 'PENDING'"
+              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800"
+            >
+                {{ tx.status }}
+              </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ tx.otherPartyUsername }}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <!-- No transactions message -->
+      <div
+        *ngIf="!isLoading && transactions.length === 0"
+        class="text-gray-500 text-sm mt-4"
+      >
+        No transactions found.
+      </div>
+
+      <!-- Pagination Controls -->
+      <div
+        class="flex justify-center items-center mt-6 space-x-4"
+        *ngIf="transactions.length > 0"
+      >
+        <button
+          (click)="goToPreviousPage()"
+          [disabled]="currentPage === 0 || isLoading"
+          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <span class="px-4 py-2">Page {{ currentPage + 1 }}</span>
+        <button
+          (click)="goToNextPage()"
+          [disabled]="!hasMore || isLoading"
+          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+
+    </div> <!-- end bg-white card -->
+
+  </div> <!-- end main content -->
+

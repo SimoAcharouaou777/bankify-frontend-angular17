@@ -74,7 +74,7 @@
 
       <div class="mt-6">
         <h3 class="text-xl font-semibold">{{ getAccountType(account.accountNumber) }}</h3>
-        <p class="text-sm mt-1">Account Number: <span class="font-mono">{{maskAccountNumber((account.accountNumber))}}</span></p>
+        <p class="text-sm mt-1">Account Number: <span class="font-mono">{{account.accountNumber}}</span></p>
         <p class="text-lg mt-2">Balance: \${{ account.balance.toLocaleString() }}</p>
       </div>
 
