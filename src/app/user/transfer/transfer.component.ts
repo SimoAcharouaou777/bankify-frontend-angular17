@@ -47,9 +47,9 @@ export class TransferComponent implements OnInit{
     });
     this.transferForm = this.fb.group({
       fromAccount: ['', [Validators.required]],
-      toAccount: ['', [Validators.required]],
+      toAccountNumber: ['', [Validators.required]],
       amount: ['', [Validators.required, Validators.min(1)]],
-      transactionType: ['ONE_TIME', [Validators.required]],
+      transactionType: ['CLASSIC', [Validators.required]],
       frequency: ['']
     });
   }
@@ -134,7 +134,7 @@ export class TransferComponent implements OnInit{
     }
 
     const fromAccount = Number(this.transferForm.value.fromAccount);
-    const toAccount = Number(this.transferForm.value.toAccount);
+    const toAccount = this.transferForm.value.toAccountNumber;
 
     if(fromAccount === toAccount) {
       this.errorMessage = 'Cannot transfer funds to the same account.';
@@ -148,7 +148,7 @@ export class TransferComponent implements OnInit{
 
     const transfer: TransferRequest = {
       fromAccount: fromAccount,
-      toAccount: toAccount,
+      toAccountNumber: toAccount,
       amount: Number(this.transferForm.value.amount),
       transactionType: this.transferForm.value.transactionType,
       frequency: this.transferForm.value.frequency
@@ -162,7 +162,7 @@ export class TransferComponent implements OnInit{
       (response) => {
         this.successMessage = 'Transfer successful!';
         this.isLoading = false;
-        this.transferForm.reset({transactionType: 'ONE_TIME'});
+        this.transferForm.reset({transactionType: 'CLASSIC'});
         this.fetchUserAccounts();
       },
       (error) => {

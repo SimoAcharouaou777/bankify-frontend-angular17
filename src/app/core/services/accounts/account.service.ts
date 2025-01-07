@@ -24,7 +24,7 @@ export interface TransactionRequest {
 
 export interface TransferRequest {
   fromAccount: number;
-  toAccount: number;
+  toAccountNumber: string;
   amount: number;
   transactionType: string;
   frequency?: string;
@@ -71,7 +71,7 @@ export class AccountService {
   }
 
   withdrawMoney(transactionRequest: TransactionRequest): Observable<any> {
-    const url = 'api/user/withdraw';
+    const url = '/api/user/withdraw';
     return this.http.post(url, transactionRequest, this.getAuthHeaders())
       .pipe(
         catchError(this.handleError)
@@ -79,7 +79,7 @@ export class AccountService {
   }
 
   transferFunds(transferRequest: TransferRequest): Observable<any> {
-    const url = 'api/user/transfer';
+    const url = '/api/user/transfer';
     return this.http.post(url, transferRequest, this.getAuthHeaders())
       .pipe(
         catchError(this.handleError)
