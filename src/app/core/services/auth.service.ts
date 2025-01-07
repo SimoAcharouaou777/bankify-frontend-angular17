@@ -1,12 +1,15 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { HttpClient, HttpHeaders} from "@angular/common/http";
-import {BehaviorSubject, catchError, Observable, of, tap} from "rxjs";
+import {BehaviorSubject, catchError, map, Observable, of, tap, throwError} from "rxjs";
+import {error} from "@angular/compiler-cli/src/transformers/util";
+import {Router} from "@angular/router";
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private router= inject(Router);
   private apiUrl = '/api/auth'
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
@@ -46,25 +49,14 @@ export class AuthService {
     );
   }
 
-  refreshToken(): Observable<any> {
-     const refreshToken = localStorage.getItem('refreshToken');
-     if(!refreshToken) {
-       this.isAuthenticatedSubject.next(false);
-       return of(null);
-     }
-     return this.http.post(`${this.apiUrl}/refresh-token`, { refreshToken }).pipe(
-       tap((response: any) => {
-         if(response.accessToken) {
-           localStorage.setItem('accessToken', response.accessToken);
-           this.isAuthenticatedSubject.next(true);
-         }
-       }),
-       catchError(error => {
-          console.error('Token refresh failed', error);
-          this.isAuthenticatedSubject.next(false);
-          return of(null);
-       })
-     );
+  refreshToken(refreshToken: String): Observable<any> {
+    return this.http.post<{ accessToken : String}>('/api/auth/refresh', {refreshToken}).pipe(
+      map(response => response.accessToken),
+      catchError((error) => {
+        this.router.navigate(['/login']);
+        return throwError(error);
+      })
+    );
   }
 
   logout(): Observable<any> {
@@ -88,5 +80,9 @@ export class AuthService {
 
   getToken(): string | null {
     return localStorage.getItem('accessToken');
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refreshToken');
   }
 }
