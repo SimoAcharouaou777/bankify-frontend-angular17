@@ -41,14 +41,14 @@ export class AccountService {
 
   getBankAccounts(page: number = 0, size: number = 10): Observable<BankAccount[]> {
     const url = `${this.baseApiUrl}?page=${page}&size=${size}`;
-    return this.http.get<BankAccount[]>(url, this.getAuthHeaders())
+    return this.http.get<BankAccount[]>(url)
       .pipe(
         catchError(this.handleError)
       );
   }
 
   createBankAccount(accountData: AccountCreationDTO): Observable<BankAccount> {
-    return this.http.post<BankAccount>(this.baseApiUrl, accountData, this.getAuthHeaders())
+    return this.http.post<BankAccount>(this.baseApiUrl, accountData)
       .pipe(
         catchError(this.handleError)
       );
@@ -56,7 +56,7 @@ export class AccountService {
 
   getBankAccountById(id: number): Observable<BankAccount> {
     const url = `${this.baseApiUrl}/${id}`;
-    return this.http.get<BankAccount>(url, this.getAuthHeaders())
+    return this.http.get<BankAccount>(url)
       .pipe(
         catchError(this.handleError)
       );
@@ -64,7 +64,7 @@ export class AccountService {
 
   depositMoney(transactionRequest: TransactionRequest): Observable<any> {
     const url = '/api/user/deposit';
-    return this.http.post(url, transactionRequest, this.getAuthHeaders())
+    return this.http.post(url, transactionRequest)
       .pipe(
         catchError(this.handleError)
       );
@@ -72,7 +72,7 @@ export class AccountService {
 
   withdrawMoney(transactionRequest: TransactionRequest): Observable<any> {
     const url = '/api/user/withdraw';
-    return this.http.post(url, transactionRequest, this.getAuthHeaders())
+    return this.http.post(url, transactionRequest)
       .pipe(
         catchError(this.handleError)
       );
@@ -80,21 +80,13 @@ export class AccountService {
 
   transferFunds(transferRequest: TransferRequest): Observable<any> {
     const url = '/api/user/transfer';
-    return this.http.post(url, transferRequest, this.getAuthHeaders())
+    return this.http.post(url, transferRequest)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  private getAuthHeaders() {
-    const token = localStorage.getItem('accessToken');
-    return {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      })
-    };
-  }
+
 
   private handleError(error: any) {
     console.error('An error occurred', error);

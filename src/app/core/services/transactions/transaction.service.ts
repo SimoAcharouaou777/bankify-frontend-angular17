@@ -11,6 +11,14 @@ export interface TransactionResponse {
     otherPartyUsername: string;
 }
 
+export interface Transaction {
+  id: number;
+  date: string;
+  description: string;
+  amount: number;
+  status: 'Pending' | 'Completed'| 'Rejected';
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -30,7 +38,12 @@ export class TransactionService {
       .pipe(catchError(this.handleError));
   }
 
-
+  getTransactions(): Observable<Transaction[]> {
+    return this.http.get<Transaction[]>(`api/user/transactions`, this.getAuthHeaders())
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
 
   private getAuthHeaders() {
     const token = localStorage.getItem('accessToken');

@@ -16,7 +16,7 @@ import {data} from "autoprefixer";
       HttpClientModule
     ],
   templateUrl: './loans.component.html',
-  styleUrl: './loans.component.css'
+
 })
 export class LoansComponent implements OnInit{
   loans: LoanResponse[] = [];

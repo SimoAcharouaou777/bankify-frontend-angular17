@@ -1,48 +1,55 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {RouterLink} from "@angular/router";
 import {SidebarComponent} from "../sidebar/sidebar.component";
+import {CommonModule} from "@angular/common";
+import {FormsModule} from "@angular/forms";
+import {HttpClientModule} from "@angular/common/http";
+import {Transaction, TransactionService} from "../../core/services/transactions/transaction.service";
 
-interface Transaction {
-  date: string;
-  description: string;
-  amount: string;
-  status: string;
-}
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
     RouterLink,
-    SidebarComponent
+    SidebarComponent,
+    CommonModule,
+    FormsModule,
+    HttpClientModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
-    transactions: Transaction[] = [
-      {
-        date: '2021-01-01',
-        description: 'Payment for January',
-        amount: '-$120.00',
-        status: 'Pending'
+export class DashboardComponent implements OnInit{
+    transactions: Transaction[] = [];
+    isLoading: boolean = false;
+    errorMessage: string = '';
+    successMessage: string = '';
+
+    constructor(private transactionService: TransactionService) { }
+
+
+  ngOnInit(): void { this.fetchTransactions(); }
+
+  fetchTransactions(): void {
+    this.isLoading = true;
+    this.transactionService.getTransactions().subscribe({
+      next: (data) => {
+        this.transactions = data;
+        this.isLoading = false;
+        this.clearMessages();
       },
-      {
-        date: '2023-09-28',
-        description: 'Salary',
-        amount: '+$3,000.00',
-        status: 'Completed'
-      },
-      {
-        date: '2023-09-25',
-        description: 'Grocery Shopping',
-        amount: '-$85.50',
-        status: 'Completed'
-      },
-      {
-        date: '2023-09-20',
-        description: 'Gym Membership',
-        amount: '-$50.00',
-        status: 'Pending'
+      error: (error) => {
+        this.errorMessage = error;
+        this.isLoading = false;
+        this.clearMessages();
       }
-    ];
+    });
+  }
+
+  clearMessages(): void {
+    setTimeout(() => {
+      this.errorMessage = '';
+      this.successMessage = '';
+    },  5000);
+  }
 }
