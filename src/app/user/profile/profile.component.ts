@@ -22,6 +22,8 @@ export class ProfileComponent implements OnInit{
   user: any = {};
   isEditing: boolean = false;
   profile: any = {};
+  successMessage = '';
+  errorMessage = '';
 
   constructor(private http: HttpClient) {}
 
