@@ -11,6 +11,7 @@ import {InvoicesComponent} from "./invoices/invoices.component";
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'accounts', component: AccountsComponent },
+  {path: 'transactions/:accountId', component: TransactionsComponent},
   { path: 'transactions', component: TransactionsComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'transfer', component: TransferComponent },

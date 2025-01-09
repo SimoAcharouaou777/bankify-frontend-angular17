@@ -24,6 +24,12 @@ export class TransactionService {
       .pipe(catchError(this.handleError));
   }
 
+  getUserTransactionsByAccount(accountId: number, page: number = 0, size: number = 10): Observable<TransactionResponse[]> {
+    const url = `api/user/accounts/${accountId}/transactions?page=${page}&size=${size}`;
+    return this.http.get<TransactionResponse[]>(url, this.getAuthHeaders())
+      .pipe(catchError(this.handleError));
+  }
+
 
 
   private getAuthHeaders() {

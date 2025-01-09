@@ -78,6 +78,13 @@
         <p class="text-lg mt-2">Balance: \${{ account.balance.toLocaleString() }}</p>
       </div>
 
+      <!-- Navigate Button -->
+      <div class="mt-4">
+        <a [routerLink]="['../transactions', account.id]" class="inline-block px-4 py-2 bg-white text-indigo-600 rounded hover:bg-gray-100">
+          View Account Transactions
+        </a>
+      </div>
+
     </div>
   </div>
 
