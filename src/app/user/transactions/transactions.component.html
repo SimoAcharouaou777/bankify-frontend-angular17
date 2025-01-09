@@ -2,39 +2,117 @@
 
 <!-- Main Content Container -->
 <div class="ml-64 p-6 mt-16 bg-gray-100 min-h-screen">
-  <h2 class="text-3xl font-semibold mb-6">My Transaction History</h2>
 
-  <!-- Outer Card -->
-  <div class="bg-white shadow rounded-lg p-6">
+  <!-- Page Title -->
+  <h2 class="text-4xl font-bold text-gray-800 mb-8">My Transaction History</h2>
 
-    <!-- Error Message -->
-    <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 text-red-700 rounded">
-      {{ errorMessage }}
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- Total Transactions Card -->
+    <div class="flex items-center p-6 bg-white shadow rounded-lg">
+      <div class="p-3 mr-4 bg-indigo-500 text-white rounded-full">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 10h4l5 5 5-5h4"></path>
+        </svg>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">Total Transactions</p>
+        <p class="text-xl font-semibold text-gray-800">{{ transactions.length }}</p>
+      </div>
     </div>
 
-    <!-- Success Message -->
-    <div *ngIf="successMessage" class="mb-4 p-4 bg-green-100 text-green-700 rounded">
-      {{ successMessage }}
+    <!-- Total Scheduled Transfers Card -->
+    <div class="flex items-center p-6 bg-white shadow rounded-lg">
+      <div class="p-3 mr-4 bg-yellow-500 text-white rounded-full">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">Scheduled Transfers</p>
+        <p class="text-xl font-semibold text-gray-800">{{ scheduledTransfers.length }}</p>
+      </div>
+    </div>
+
+    <!-- Active Accounts Card -->
+    <div class="flex items-center p-6 bg-white shadow rounded-lg">
+      <div class="p-3 mr-4 bg-green-500 text-white rounded-full">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 7h18M3 12h18M3 17h18"></path>
+        </svg>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">Active Accounts</p>
+        <p class="text-xl font-semibold text-gray-800">{{ accounts.length }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Outer Card -->
+  <div class="bg-white shadow-lg rounded-lg p-8">
+
+    <!-- Messages Section -->
+    <div class="mb-6">
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="flex items-center p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+        <svg class="inline flex-shrink-0 mr-3 w-5 h-5 text-red-700" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+                d="M18 10c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8zm-11-1a1 1 0 112 0v4a1 1 0 11-2 0v-4zm1-7a1 1 0 112 0 1 1 0 01-2 0z"
+                clip-rule="evenodd" />
+        </svg>
+        <div>
+          <span class="font-medium">Error:</span> {{ errorMessage }}
+        </div>
+      </div>
+
+      <!-- Success Message -->
+      <div *ngIf="successMessage" class="flex items-center p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
+        <svg class="inline flex-shrink-0 mr-3 w-5 h-5 text-green-700" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"
+                clip-rule="evenodd" />
+        </svg>
+        <div>
+          <span class="font-medium">Success:</span> {{ successMessage }}
+        </div>
+      </div>
     </div>
 
     <!-- Loading Spinner -->
-    <div *ngIf="isLoading" class="flex justify-center mt-4">
-      <div class="loader"></div>
+    <div *ngIf="isLoading" class="flex justify-center my-8">
+      <svg class="animate-spin h-10 w-10 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+      </svg>
     </div>
 
     <!-- Account Selection Dropdown -->
-    <div *ngIf="!isLoading && accounts.length > 0 && !selectedAccountId" class="mb-6">
-      <label for="accountSelect" class="block text-sm font-medium text-gray-700">Select an Account to View Transactions:</label>
-      <select id="accountSelect" [(ngModel)]="selectedAccountId" (change)="onAccountSelect(selectedAccountId)" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-        <option value="" disabled selected>Select an account</option>
-        <option *ngFor="let account of accounts" [value]="account.id">
-          {{ getAccountType(account) }} - {{ account.accountNumber }}
-        </option>
-      </select>
+    <div *ngIf="!isLoading && accounts.length > 0 && !selectedAccountId" class="mb-8">
+      <label for="accountSelect" class="block text-lg font-medium text-gray-700 mb-2">Select an Account to View Transactions:</label>
+      <div class="relative">
+        <select id="accountSelect" [(ngModel)]="selectedAccountId" (change)="onAccountSelect(selectedAccountId)"
+                class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-3 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+          <option value="" disabled selected>Select an account</option>
+          <option *ngFor="let account of accounts" [value]="account.id">
+            {{ getAccountType(account) }} - {{ account.accountNumber }}
+          </option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <path d="M5.516 7.548a.75.75 0 01.959 0L10 10.94l3.525-3.392a.75.75 0 111.02 1.105l-4 3.85a.75.75 0 01-1.02 0l-4-3.85a.75.75 0 010-1.105z" />
+          </svg>
+        </div>
+      </div>
     </div>
 
     <!-- Prompt to Select an Account -->
-    <div *ngIf="!isLoading && !selectedAccountId" class="text-gray-500 text-sm mt-4">
+    <div *ngIf="!isLoading && !selectedAccountId" class="text-center text-gray-500 text-lg mt-4">
       Please select an account from the dropdown above to view its transactions.
     </div>
 
@@ -42,106 +120,191 @@
     <div *ngIf="!isLoading && selectedAccountId">
 
       <!-- Transactions Table -->
-      <div *ngIf="transactions.length > 0" class="mb-8">
-        <h3 class="text-2xl font-semibold mb-4">Transactions</h3>
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Other Party</th>
-          </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-          <tr *ngFor="let tx of transactions">
-            <td class="px-6 py-4 whitespace-nowrap">{{ tx.date | date:'short' }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ tx.amount + " DH" }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ tx.type }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <!-- Status Badges -->
-              <span
-                *ngIf="tx.status === 'APPROVED'"
-                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
-              >
+      <div *ngIf="transactions.length > 0" class="mb-12">
+        <h3 class="text-2xl font-semibold text-gray-700 mb-6">Transactions</h3>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white border border-gray-200">
+            <thead>
+            <tr>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Date</th>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Amount</th>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Type</th>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Other Party</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let tx of transactions" class="hover:bg-gray-100 transition-colors">
+              <!-- Date -->
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex items-center">
+                <svg class="w-5 h-5 text-indigo-500 mr-2" fill="none" stroke="currentColor" stroke-width="2"
+                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                {{ tx.date | date:'short' }}
+              </td>
+
+              <!-- Amount -->
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <span [ngClass]="{
+                  'text-green-600': tx.amount > 0,
+                  'text-red-600': tx.amount < 0
+                }">
+                  {{ tx.amount | currency:'MAD':'symbol':'1.2-2' }}
+                </span>
+              </td>
+
+              <!-- Type -->
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <span class="flex items-center">
+                  <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                       viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  {{ tx.type }}
+                </span>
+              </td>
+
+              <!-- Status -->
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <span [ngClass]="{
+                  'text-green-700 bg-green-100': tx.status === 'APPROVED',
+                  'text-yellow-700 bg-yellow-100': tx.status === 'PENDING',
+                  'text-gray-700 bg-gray-100': tx.status !== 'APPROVED' && tx.status !== 'PENDING'
+                }" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold capitalize">
                   {{ tx.status }}
                 </span>
-              <span
-                *ngIf="tx.status === 'PENDING'"
-                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"
-              >
-                  {{ tx.status }}
-                </span>
-              <span
-                *ngIf="tx.status !== 'APPROVED' && tx.status !== 'PENDING'"
-                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800"
-              >
-                  {{ tx.status }}
-                </span>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ tx.otherPartyUsername }}</td>
-          </tr>
-          </tbody>
-        </table>
+              </td>
+
+              <!-- Other Party -->
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex items-center">
+                <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" stroke-width="2"
+                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M16 14l-4-4m0 0l-4 4m4-4v12"></path>
+                </svg>
+                {{ tx.otherPartyUsername }}
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- No Transactions Message -->
-      <div *ngIf="!isLoading && selectedAccountId && transactions.length === 0" class="text-gray-500 text-sm mt-4">
+      <div *ngIf="!isLoading && selectedAccountId && transactions.length === 0" class="text-center text-gray-500 text-lg mt-4">
         No transactions found for this account.
       </div>
 
       <!-- Scheduled Transfers Table -->
-      <div *ngIf="scheduledTransfers.length > 0" class="mb-8">
-        <h3 class="text-2xl font-semibold mb-4">Scheduled Transfers</h3>
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Next Execution Date</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Frequency</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">From Account</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">To Account</th>
-          </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-          <tr *ngFor="let st of scheduledTransfers">
-            <td class="px-6 py-4 whitespace-nowrap">{{ st.nextExecutionDate | date:'short' }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ st.amount + " DH" }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ st.frequency }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ st.fromAccountNumber }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ st.toAccountNumber }}</td>
-          </tr>
-          </tbody>
-        </table>
+      <!-- Scheduled Transfers Table -->
+      <div *ngIf="scheduledTransfers.length > 0" class="mb-12">
+        <h3 class="text-2xl font-semibold text-gray-700 mb-6">Scheduled Transfers</h3>
+        <div class="overflow-x-auto">
+          <table class="min-w-max w-full bg-white border border-gray-200">
+            <thead>
+            <tr>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Next Execution Date</th>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Amount</th>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Frequency</th>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">From Account</th>
+              <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">To Account</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let st of scheduledTransfers; let i = index" [ngClass]="{'bg-gray-50': i % 2 === 0}" class="hover:bg-gray-100 transition-colors">
+              <!-- Next Execution Date -->
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <div class="flex items-center">
+                  <svg class="w-5 h-5 text-indigo-500 mr-2" fill="none" stroke="currentColor" stroke-width="2"
+                       viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  {{ st.nextExecutionDate | date:'short' }}
+                </div>
+              </td>
+
+              <!-- Amount -->
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+            <span [ngClass]="{
+              'text-green-600': st.amount > 0,
+              'text-red-600': st.amount < 0
+            }">
+              {{ st.amount | currency:'MAD':'symbol':'1.2-2' }}
+            </span>
+              </td>
+
+              <!-- Frequency -->
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <span class="capitalize">{{ st.frequency }}</span>
+              </td>
+
+              <!-- From Account -->
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <div class="flex items-center">
+                  <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" stroke-width="2"
+                       viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M16 14l-4-4m0 0l-4 4m4-4v12"></path>
+                  </svg>
+                  {{ st.fromAccountNumber }}
+                </div>
+              </td>
+
+              <!-- To Account -->
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <div class="flex items-center">
+                  <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" stroke-width="2"
+                       viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M16 14l-4-4m0 0l-4 4m4-4v12"></path>
+                  </svg>
+                  {{ st.toAccountNumber }}
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
+
       <!-- No Scheduled Transfers Message -->
-      <div *ngIf="!isLoading && selectedAccountId && scheduledTransfers.length === 0" class="text-gray-500 text-sm mt-4">
+      <div *ngIf="!isLoading && selectedAccountId && scheduledTransfers.length === 0" class="text-center text-gray-500 text-lg mt-4">
         No scheduled transfers found for this account.
       </div>
 
       <!-- Pagination Controls -->
-      <div class="flex justify-center items-center mt-6 space-x-4" *ngIf="(transactions.length > 0 || scheduledTransfers.length > 0)">
+      <div class="flex justify-center items-center mt-8 space-x-4">
         <button
           (click)="goToPreviousPage()"
           [disabled]="currentPage === 0 || isLoading"
-          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
-        >
+          class="flex items-center px-5 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 disabled:bg-indigo-300 transition-colors">
+          <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M15 19l-7-7 7-7"></path>
+          </svg>
           Previous
         </button>
-        <span class="px-4 py-2">Page {{ currentPage + 1 }}</span>
+        <span class="text-gray-700 font-medium">Page {{ currentPage + 1 }}</span>
         <button
           (click)="goToNextPage()"
           [disabled]="(!hasMoreTransactions && !hasMoreScheduled) || isLoading"
-          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
-        >
+          class="flex items-center px-5 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 disabled:bg-indigo-300 transition-colors">
           Next
+          <svg class="w-5 h-5 inline-block ml-2" fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 5l7 7-7 7"></path>
+          </svg>
         </button>
       </div>
 
-    </div>
+    </div> <!-- end bg-white card -->
 
-  </div> <!-- end bg-white card -->
-
-</div> <!-- end main content -->
+  </div> <!-- end main content -->
+</div>

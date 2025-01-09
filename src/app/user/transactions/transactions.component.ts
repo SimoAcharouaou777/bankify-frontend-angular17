@@ -3,7 +3,7 @@ import {SidebarComponent} from "../sidebar/sidebar.component";
 import {TransactionResponse, TransactionService} from "../../core/services/transactions/transaction.service";
 import {AccountService, BankAccount} from "../../core/services/accounts/account.service";
 import {data} from "autoprefixer";
-import {DatePipe, NgForOf, NgIf} from "@angular/common";
+import {CurrencyPipe, DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {
@@ -19,7 +19,9 @@ import {
     NgIf,
     DatePipe,
     NgForOf,
-    FormsModule
+    FormsModule,
+    NgClass,
+    CurrencyPipe
   ],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.css'
