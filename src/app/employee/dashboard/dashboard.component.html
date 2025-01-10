@@ -1,1 +1,48 @@
-<p>dashboard works!</p>
+<app-sidebar></app-sidebar>
+<div class="ml-64 p-6 mt-16 bg-gray-100 min-h-screen">
+  <h2 class="text-3xl font-semibold mb-6">Welcome to the Employee Dashboard</h2>
+
+  <!-- Overview -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="bg-white shadow rounded-lg p-6">
+      <h3 class="text-xl font-medium mb-2">Pending Transactions</h3>
+      <p class="text-2xl font-bold text-yellow-600">{{ pendingTransactions }}</p>
+    </div>
+    <div class="bg-white shadow rounded-lg p-6">
+      <h3 class="text-xl font-medium mb-2">Pending Loans</h3>
+      <p class="text-2xl font-bold text-blue-600">{{ pendingLoans }}</p>
+    </div>
+    <div class="bg-white shadow rounded-lg p-6">
+      <h3 class="text-xl font-medium mb-2">Pending Invoices</h3>
+      <p class="text-2xl font-bold text-red-600">{{ pendingInvoices }}</p>
+    </div>
+  </div>
+
+  <!-- Recent Items -->
+  <div class="bg-white shadow rounded-lg p-6">
+    <h3 class="text-xl font-medium mb-4">Recent Approvals</h3>
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+      <tr>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+      </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+      <tr *ngFor="let item of recentPendingItems">
+        <td class="px-6 py-4 whitespace-nowrap">{{ item.type }}</td>
+        <td class="px-6 py-4 whitespace-nowrap">{{ item.description }}</td>
+        <td class="px-6 py-4 whitespace-nowrap">{{ item.date | date:'short' }}</td>
+        <td class="px-6 py-4 whitespace-nowrap text-center">
+          <button class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 mr-2"
+                  (click)="approveItem(item.id, item.type)">Approve</button>
+          <button class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                  (click)="rejectItem(item.id, item.type)">Reject</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
