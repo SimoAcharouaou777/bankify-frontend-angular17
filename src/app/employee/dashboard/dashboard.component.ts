@@ -1,13 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {SidebarComponent} from "../sidebar/sidebar.component";
-import {DatePipe} from "@angular/common";
+import {DatePipe, NgForOf} from "@angular/common";
+import {DashboardService} from "../../core/services/employee/employee-dashboard/dashboard.service";
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
     SidebarComponent,
-    DatePipe
+    DatePipe,
+    NgForOf
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
@@ -18,26 +20,64 @@ export class DashboardComponent implements OnInit{
   pendingInvoices: number = 0;
   recentPendingItems: any[] = [];
 
-  ngOnInit(): void { this.fetchDashboardData(); }
+  constructor(private dashboardService: DashboardService) {}
 
-  fetchDashboardData(): void {
-    this.pendingTransactions = 5;
-    this.pendingLoans = 3;
-    this.pendingInvoices = 2;
+  ngOnInit(): void { this.loadDashboardSummary(); }
 
-    this.recentPendingItems = [
-      { id: 1, type: 'Transaction', description: 'Pending transaction #1', date: new Date() },
-      { id: 2, type: 'Loan', description: 'Loan application #45', date: new Date() },
-      { id: 3, type: 'Invoice', description: 'Invoice #789', date: new Date() },
-    ];
+  loadDashboardSummary(): void {
+    this.dashboardService.getDashboardDataSummary().subscribe({
+      next: (data) => {
+        this.pendingTransactions = data.pendingTransactions;
+        this.pendingLoans = data.pendingLoans;
+        this.pendingInvoices = data.pendingInvoices;
+        this.recentPendingItems = data.recentPendingItems || [];
+      },
+      error: (error) => {
+        console.error('Error loading dashboard summary:', error);
+      }
+    });
   }
 
-  approveItem(id: number, type: string): void {
-    console.log(`Approving ${type} with ID: ${id}`);
+  approveItem(itemId: number, itemType: string): void {
+    let approveCall;
+
+    if(itemType === 'Transaction') {
+      approveCall = this.dashboardService.approveTransaction(itemId);
+    } else if(itemType === 'Loan') {
+      approveCall = this.dashboardService.approveLoan(itemId)
+    } else if (itemType === 'Invoice') {
+      approveCall = this.dashboardService.approveInvoice(itemId);
+    }
+
+    approveCall?.subscribe({
+      next: () => {
+        console.log(`${itemType} with ID: ${itemId} approved successfully`);
+        this.loadDashboardSummary();
+      },
+      error: (error) => {
+        console.error(`Error approving ${itemType} with ID: ${itemId}`, error);
+      }
+    });
   }
 
-  rejectItem(id: number, type: string): void {
-    console.log(`Rejecting ${type} with ID: ${id}`);
-  }
+  rejectItem(itemId: number, itemType: string): void {
+    let rejectCall;
+    if(itemType === 'Transaction') {
+      rejectCall = this.dashboardService.rejectTransaction(itemId);
+    } else if (itemType === 'Loan') {
+      rejectCall = this.dashboardService.rejectLoan(itemId);
+    } else if (itemType === 'Invoice') {
+      rejectCall = this.dashboardService.rejectInvoice(itemId);
+    }
 
+    rejectCall?.subscribe({
+      next: () => {
+        console.log(`${itemType} with ID: ${itemId} rejected successfully`);
+        this.loadDashboardSummary();
+      },
+      error: (error) => {
+        console.error(`Error rejecting ${itemType} with ID: ${itemId}`, error);
+      }
+    });
+  }
 }

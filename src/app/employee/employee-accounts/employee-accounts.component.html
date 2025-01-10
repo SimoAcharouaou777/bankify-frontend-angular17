@@ -1,1 +1,32 @@
-<p>employee-accounts works!</p>
+<app-sidebar></app-sidebar>
+<div class="ml-64 p-6 mt-16 bg-gray-100 min-h-screen">
+  <div class="bg-white shadow rounded-lg p-6">
+    <h2 class="text-3xl font-semibold mb-6">Customer Accounts</h2>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full table-auto divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Account Number</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Balance</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+        </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+        <tr *ngFor="let account of accounts">
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ account.accountNumber }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ account.balance | currency }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm">
+              <span [ngClass]="{
+                'bg-green-100 text-green-800': account.status === 'ACTIVE',
+                'bg-red-100 text-red-800': account.status === 'INACTIVE'
+              }" class="px-2 py-1 rounded-full text-xs font-semibold">
+                {{ account.status | titlecase }}
+              </span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

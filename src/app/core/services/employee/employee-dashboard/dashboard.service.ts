@@ -6,34 +6,33 @@ import {Observable} from "rxjs";
   providedIn: 'root'
 })
 export class DashboardService {
-  private url = 'api/employee'
   constructor( private http: HttpClient) { }
 
   getDashboardDataSummary(): Observable<any> {
-    return this.http.get(`${this.url}/dashboard-data`);
+    return this.http.get(`api/employee/dashboard-data`);
   }
 
   approveTransaction(transactionId: number): Observable<any> {
-    return this.http.post(`${this.url}/transactions/${transactionId}/approve`, {});
+    return this.http.post(`api/employee/transactions/${transactionId}/approve`, {});
   }
 
   rejectTransaction(transactionId: number): Observable<any> {
-    return this.http.post(`${this.url}/transactions/${transactionId}/reject`, {});
+    return this.http.post(`api/employee/transactions/${transactionId}/reject`, {});
   }
 
   approveLoan(loanId: number): Observable<any> {
-    return this.http.post(`${this.url}/loans/${loanId}/approve`, {});
+    return this.http.post(`api/employee/loans/${loanId}/approve`, {});
   }
 
   rejectLoan(loanId: number): Observable<any> {
-    return this.http.post(`${this.url}/loans/${loanId}/reject`, {});
+    return this.http.post(`api/employee/loans/${loanId}/reject`, {});
   }
 
   approveInvoice(invoiceId: number): Observable<any> {
-    return this.http.post(`${this.url}/invoices/${invoiceId}/approve`, {});
+    return this.http.post(`api/employee/invoices/${invoiceId}/approve`, {});
   }
 
   rejectInvoice(invoiceId: number): Observable<any> {
-    return this.http.post(`${this.url}/invoices/${invoiceId}/reject`, {});
+    return this.http.post(`api/employee/invoices/${invoiceId}/reject`, {});
   }
 }
