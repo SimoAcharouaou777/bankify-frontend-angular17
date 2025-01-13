@@ -15,7 +15,7 @@ import {SidebarComponent} from "../sidebar/sidebar.component";
     TitleCasePipe
   ],
   templateUrl: './employee-accounts.component.html',
-  styleUrl: './employee-accounts.component.css'
+
 })
 export class EmployeeAccountsComponent implements OnInit{
   accounts: any[] = [];

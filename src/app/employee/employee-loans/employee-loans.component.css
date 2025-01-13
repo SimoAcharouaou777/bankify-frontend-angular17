@@ -1,0 +1,30 @@
+/* Add any custom styles to improve the look of the loans table */
+.table-auto th,
+.table-auto td {
+  padding: 12px;
+  text-align: left;
+}
+
+.bg-yellow-100 {
+  background-color: #fefcbf;
+}
+
+.text-yellow-800 {
+  color: #b7791f;
+}
+
+.bg-green-100 {
+  background-color: #c6f6d5;
+}
+
+.text-green-800 {
+  color: #2f855a;
+}
+
+.bg-red-100 {
+  background-color: #fed7d7;
+}
+
+.text-red-800 {
+  color: #c53030;
+}

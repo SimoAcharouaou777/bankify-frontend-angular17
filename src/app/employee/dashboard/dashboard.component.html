@@ -18,28 +18,33 @@
     </div>
   </div>
 
-  <!-- Recent Items -->
+  <!-- Recent Transactions -->
   <div class="bg-white shadow rounded-lg p-6">
-    <h3 class="text-xl font-medium mb-4">Recent Approvals</h3>
+    <h3 class="text-xl font-medium mb-4">Recent Transactions</h3>
     <table class="min-w-full divide-y divide-gray-200">
       <thead class="bg-gray-50">
       <tr>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transaction ID</th>
         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
       </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-      <tr *ngFor="let item of recentPendingItems">
-        <td class="px-6 py-4 whitespace-nowrap">{{ item.type }}</td>
-        <td class="px-6 py-4 whitespace-nowrap">{{ item.description }}</td>
-        <td class="px-6 py-4 whitespace-nowrap">{{ item.date | date:'short' }}</td>
-        <td class="px-6 py-4 whitespace-nowrap text-center">
-          <button class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 mr-2"
-                  (click)="approveItem(item.id, item.type)">Approve</button>
-          <button class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                  (click)="rejectItem(item.id, item.type)">Reject</button>
+      <tr *ngFor="let transaction of recentTransactions">
+        <td class="px-6 py-4 whitespace-nowrap">{{ transaction.id }}</td>
+        <td class="px-6 py-4 whitespace-nowrap">{{ transaction.type }}</td>
+        <td class="px-6 py-4 whitespace-nowrap">{{ transaction.amount | currency }}</td>
+        <td class="px-6 py-4 whitespace-nowrap">{{ transaction.date | date:'short' }}</td>
+        <td class="px-6 py-4 whitespace-nowrap">
+        <span [ngClass]="{
+          'bg-green-100 text-green-800': transaction.status === 'APPROVED',
+          'bg-yellow-100 text-yellow-800': transaction.status === 'PENDING',
+          'bg-red-100 text-red-800': transaction.status === 'REJECTED'
+        }" class="px-2 py-1 rounded-full text-xs font-semibold">
+          {{ transaction.status | titlecase }}
+        </span>
         </td>
       </tr>
       </tbody>

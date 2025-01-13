@@ -12,6 +12,10 @@ export class DashboardService {
     return this.http.get(`api/employee/dashboard-data`);
   }
 
+  getRecentTransactions(): Observable<any> {
+    return this.http.get(`api/employee/recent-transactions`);
+  }
+
   approveTransaction(transactionId: number): Observable<any> {
     return this.http.post(`api/employee/transactions/${transactionId}/approve`, {});
   }
@@ -35,4 +39,5 @@ export class DashboardService {
   rejectInvoice(invoiceId: number): Observable<any> {
     return this.http.post(`api/employee/invoices/${invoiceId}/reject`, {});
   }
+
 }
