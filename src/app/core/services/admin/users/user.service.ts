@@ -5,12 +5,12 @@ import {Observable} from "rxjs";
 @Injectable({
   providedIn: 'root'
 })
-export class DashboardService {
+export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  getDashboardSummary(): Observable<any> {
-    return this.http.get('api/admin/dashboard-summary');
+  getAllUsers(): Observable<any[]> {
+    return this.http.get<any[]>('api/admin/users');
   }
 
   deleteUser(userId: number): Observable<any> {
