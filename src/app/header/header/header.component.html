@@ -1,22 +1,78 @@
-<header class="bg-white shadow-md fixed w-full z-10 top-0">
+<header class="bg-white shadow-sm fixed w-full z-10 top-0">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between h-16">
+    <div class="flex justify-between h-16 items-center">
       <!-- Application Name -->
       <div class="flex-shrink-0 flex items-center">
-        <span class="text-xl font-bold text-blue-600">Bankify</span>
+        <span class="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors duration-200 cursor-pointer">Bankify</span>
       </div>
 
       <!-- Authentication Buttons -->
       <div class="flex items-center space-x-4">
-        <button *ngIf="!isAuthenticated" routerLink="/login" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
-          Login
-        </button>
-        <button *ngIf="!isAuthenticated" routerLink="/signup" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
-          Signup
-        </button>
-        <button *ngIf="isAuthenticated" (click)="logout()" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
-          Logout
-        </button>
+        <!-- Login and Signup Buttons -->
+        <ng-container *ngIf="!isAuthenticated">
+          <button
+            routerLink="/login"
+            class="text-gray-700 hover:text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+          >
+            Login
+          </button>
+          <button
+            routerLink="/signup"
+            class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+          >
+            Signup
+          </button>
+        </ng-container>
+
+        <!-- Authenticated User Dropdown -->
+        <ng-container *ngIf="isAuthenticated">
+          <div class="relative">
+            <button
+              (click)="toggleDropdown()"
+              class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none transition-colors duration-200"
+            >
+              <span class="mr-2 text-sm font-medium">Welcome, {{ user.username }}</span>
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div
+              *ngIf="isDropdownOpen"
+              class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-20"
+            >
+              <div class="py-1">
+                <a
+                  routerLink="user/profile"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200"
+                >Profile</a
+                >
+                <a
+                  routerLink="/settings"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200"
+                >Settings</a
+                >
+                <button
+                  (click)="logout()"
+                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>

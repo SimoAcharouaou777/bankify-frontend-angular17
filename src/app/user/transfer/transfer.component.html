@@ -1,29 +1,47 @@
-<!-- src/app/user/transfer/transfer.component.html -->
-
 <app-sidebar></app-sidebar>
-<div class="ml-64 p-6 mt-16 bg-gray-100 min-h-screen">
+<div class="ml-64 p-8 mt-16 bg-gray-50 min-h-screen">
 
-  <h2 class="text-3xl font-semibold mb-6 text-center">Banking Operations</h2>
+  <!-- Page Title -->
+  <h2 class="text-4xl font-bold text-gray-900 mb-8 text-center flex items-center justify-center">
+    <svg class="w-8 h-8 text-indigo-600 mr-4" fill="none" stroke="currentColor" stroke-width="2"
+         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
+    </svg>
+    Banking Operations
+  </h2>
 
   <!-- Success Message -->
-  <div *ngIf="successMessage" class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+  <div *ngIf="successMessage" class="mb-6 p-4 bg-green-100 text-green-700 rounded-lg text-center">
     {{ successMessage }}
   </div>
 
   <!-- Error Message -->
-  <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+  <div *ngIf="errorMessage" class="mb-6 p-4 bg-red-100 text-red-700 rounded-lg text-center">
     {{ errorMessage }}
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- Operations Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
     <!-- Deposit Section -->
-    <div class="bg-white shadow-md rounded-lg p-6">
-      <h3 class="text-2xl font-medium mb-4 text-green-600">Deposit Money</h3>
+    <div class="bg-white rounded-xl shadow-lg p-6 transform transition duration-300 hover:shadow-xl">
+      <h3 class="text-2xl font-semibold text-green-600 mb-6 flex items-center">
+        <svg class="w-6 h-6 text-green-600 mr-2" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Deposit Money
+      </h3>
       <form [formGroup]="depositForm" (ngSubmit)="onDeposit()">
-        <div class="mb-4">
-          <label class="block text-gray-700 mb-2">Account</label>
-          <select formControlName="accountId" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-green-300">
+        <!-- Account Dropdown -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Account</label>
+          <select
+            formControlName="accountId"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+          >
             <option value="">Select Account</option>
             <option *ngFor="let account of userAccounts" [value]="account.id">
               {{ account.accountType }} - {{ account.accountNumber }} - \${{ account.balance.toLocaleString() }}
@@ -34,27 +52,49 @@
           </div>
         </div>
 
-        <div class="mb-4">
-          <label class="block text-gray-700 mb-2">Amount</label>
-          <input type="number" formControlName="amount" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-green-300" placeholder="Enter Amount" />
+        <!-- Amount Input -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Amount</label>
+          <input
+            type="number"
+            formControlName="amount"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            placeholder="Enter Amount"
+          />
           <div *ngIf="depositForm.get('amount')?.invalid && depositForm.get('amount')?.touched" class="text-red-500 text-sm mt-1">
             Amount is required and must be greater than zero.
           </div>
         </div>
 
-        <button type="submit" [disabled]="isLoading" class="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition duration-200">
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          [disabled]="isLoading"
+          class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors duration-200"
+        >
           {{ isLoading ? 'Processing...' : 'Deposit' }}
         </button>
       </form>
     </div>
 
     <!-- Withdraw Section -->
-    <div class="bg-white shadow-md rounded-lg p-6">
-      <h3 class="text-2xl font-medium mb-4 text-red-600">Withdraw Money</h3>
+    <div class="bg-white rounded-xl shadow-lg p-6 transform transition duration-300 hover:shadow-xl">
+      <h3 class="text-2xl font-semibold text-red-600 mb-6 flex items-center">
+        <svg class="w-6 h-6 text-red-600 mr-2" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Withdraw Money
+      </h3>
       <form [formGroup]="withdrawForm" (ngSubmit)="onWithdraw()">
-        <div class="mb-4">
-          <label class="block text-gray-700 mb-2">Account</label>
-          <select formControlName="accountId" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-red-300">
+        <!-- Account Dropdown -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Account</label>
+          <select
+            formControlName="accountId"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+          >
             <option value="">Select Account</option>
             <option *ngFor="let account of userAccounts" [value]="account.id">
               {{ account.accountType }} - {{ account.accountNumber }} - \${{ account.balance.toLocaleString() }}
@@ -65,28 +105,49 @@
           </div>
         </div>
 
-        <div class="mb-4">
-          <label class="block text-gray-700 mb-2">Amount</label>
-          <input type="number" formControlName="amount" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-red-300" placeholder="Enter Amount" />
+        <!-- Amount Input -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Amount</label>
+          <input
+            type="number"
+            formControlName="amount"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            placeholder="Enter Amount"
+          />
           <div *ngIf="withdrawForm.get('amount')?.invalid && withdrawForm.get('amount')?.touched" class="text-red-500 text-sm mt-1">
             Amount is required and must be greater than zero.
           </div>
         </div>
 
-        <button type="submit" [disabled]="isLoading" class="w-full px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition duration-200">
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          [disabled]="isLoading"
+          class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-200"
+        >
           {{ isLoading ? 'Processing...' : 'Withdraw' }}
         </button>
       </form>
     </div>
 
     <!-- Transfer Section -->
-    <div class="bg-white shadow-md rounded-lg p-6">
-      <h3 class="text-2xl font-medium mb-4 text-blue-600">Transfer Funds</h3>
+    <div class="bg-white rounded-xl shadow-lg p-6 transform transition duration-300 hover:shadow-xl">
+      <h3 class="text-2xl font-semibold text-blue-600 mb-6 flex items-center">
+        <svg class="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Transfer Funds
+      </h3>
       <form [formGroup]="transferForm" (ngSubmit)="onTransfer()">
         <!-- From Account Dropdown -->
-        <div class="mb-4">
-          <label class="block text-gray-700 mb-2">From Account</label>
-          <select formControlName="fromAccount" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300">
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">From Account</label>
+          <select
+            formControlName="fromAccount"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
             <option value="">Select From Account</option>
             <option *ngFor="let account of userAccounts" [value]="account.id">
               {{ account.accountType }} - {{ account.accountNumber }} - \${{ account.balance.toLocaleString() }}
@@ -98,36 +159,52 @@
         </div>
 
         <!-- To Account (RIB) -->
-        <div class="mb-4">
-          <label class="block text-gray-700 mb-2">To Account (RIB)</label>
-          <input type="text" formControlName="toAccountNumber" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
-          placeholder="Enter recipient account number (RIB)">
-          <div *ngIf="transferForm.get('toAccountNumber')?.invalid && transferForm.get('toAccountNumber')?.touched"
-          class="text-red-500 text-sm mt-1">
-            To Account (RIB) is required
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">To Account (RIB)</label>
+          <input
+            type="text"
+            formControlName="toAccountNumber"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter recipient account number (RIB)"
+          />
+          <div *ngIf="transferForm.get('toAccountNumber')?.invalid && transferForm.get('toAccountNumber')?.touched" class="text-red-500 text-sm mt-1">
+            To Account (RIB) is required.
           </div>
         </div>
 
-        <div class="mb-4">
-          <label class="block text-gray-700 mb-2">Amount</label>
-          <input type="number" formControlName="amount" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300" placeholder="Enter Amount" />
+        <!-- Amount Input -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Amount</label>
+          <input
+            type="number"
+            formControlName="amount"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter Amount"
+          />
           <div *ngIf="transferForm.get('amount')?.invalid && transferForm.get('amount')?.touched" class="text-red-500 text-sm mt-1">
             Amount is required and must be greater than zero.
           </div>
         </div>
 
-        <div class="mb-4">
-          <label class="block text-gray-700 mb-2">Transaction Type</label>
-          <select formControlName="transactionType" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300">
+        <!-- Transaction Type Dropdown -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Transaction Type</label>
+          <select
+            formControlName="transactionType"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
             <option value="CLASSIC">One-Time Transfer</option>
             <option value="PERMANENT">Permanent Transfer</option>
           </select>
         </div>
 
         <!-- Frequency Field (Shown Only for Permanent Transfers) -->
-        <div class="mb-4" *ngIf="transferForm.value.transactionType === 'PERMANENT'">
-          <label class="block text-gray-700 mb-2">Frequency</label>
-          <select formControlName="frequency" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300">
+        <div class="mb-6" *ngIf="transferForm.value.transactionType === 'PERMANENT'">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Frequency</label>
+          <select
+            formControlName="frequency"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
             <option value="">Select Frequency</option>
             <option value="Daily">Daily</option>
             <option value="Weekly">Weekly</option>
@@ -139,17 +216,20 @@
           </div>
         </div>
 
-        <button type="submit" [disabled]="isLoading" class="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200">
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          [disabled]="isLoading"
+          class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+        >
           {{ isLoading ? 'Processing...' : 'Transfer' }}
         </button>
       </form>
     </div>
-
   </div>
 
   <!-- Loading Spinner -->
-  <div *ngIf="isLoading" class="flex justify-center mt-6">
-    <div class="loader"></div>
+  <div *ngIf="isLoading" class="flex justify-center mt-8">
+    <div class="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
   </div>
-
 </div>

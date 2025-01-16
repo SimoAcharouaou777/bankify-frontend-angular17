@@ -1,54 +1,80 @@
 <app-sidebar></app-sidebar>
-<div class="ml-64 p-6 mt-16">
-  <h2 class="text-3xl font-semibold mb-6">My Bank Accounts</h2>
+<div class="ml-64 p-8 mt-16 bg-gray-50 min-h-screen">
+  <!-- Page Title -->
+  <h2 class="text-3xl font-bold text-gray-900 mb-6">My Bank Accounts</h2>
 
   <!-- Success Message -->
-  <div *ngIf="successMessage" class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+  <div *ngIf="successMessage" class="mb-6 p-4 bg-green-100 text-green-700 rounded-lg">
     {{ successMessage }}
   </div>
 
   <!-- Error Message -->
-  <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+  <div *ngIf="errorMessage" class="mb-6 p-4 bg-red-100 text-red-700 rounded-lg">
     {{ errorMessage }}
   </div>
 
   <!-- Create Account Form -->
-  <div class="mb-8 bg-white shadow rounded-lg p-6">
-    <h3 class="text-2xl font-medium mb-4">Create New Bank Account</h3>
+  <div class="mb-8 bg-white rounded-xl shadow-lg p-6">
+    <h3 class="text-2xl font-semibold text-gray-900 mb-4">Create New Bank Account</h3>
     <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+      <!-- First Name -->
       <div class="mb-4">
-        <label class="block text-gray-700">First Name</label>
-        <input type="text" formControlName="firstName" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300" />
-        <div *ngIf="accountForm.get('firstName')?.invalid && accountForm.get('firstName')?.touched" class="text-red-500 text-sm">
+        <label class="block text-gray-700 font-medium mb-2">First Name</label>
+        <input
+          type="text"
+          formControlName="firstName"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+        <div *ngIf="accountForm.get('firstName')?.invalid && accountForm.get('firstName')?.touched" class="text-red-500 text-sm mt-1">
           First Name is required and should be less than 50 characters.
         </div>
       </div>
 
+      <!-- Last Name -->
       <div class="mb-4">
-        <label class="block text-gray-700">Last Name</label>
-        <input type="text" formControlName="lastName" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300" />
-        <div *ngIf="accountForm.get('lastName')?.invalid && accountForm.get('lastName')?.touched" class="text-red-500 text-sm">
+        <label class="block text-gray-700 font-medium mb-2">Last Name</label>
+        <input
+          type="text"
+          formControlName="lastName"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+        <div *ngIf="accountForm.get('lastName')?.invalid && accountForm.get('lastName')?.touched" class="text-red-500 text-sm mt-1">
           Last Name is required and should be less than 50 characters.
         </div>
       </div>
 
+      <!-- Identity Number -->
       <div class="mb-4">
-        <label class="block text-gray-700">Identity Number</label>
-        <input type="text" formControlName="identityNumber" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300" />
-        <div *ngIf="accountForm.get('identityNumber')?.invalid && accountForm.get('identityNumber')?.touched" class="text-red-500 text-sm">
+        <label class="block text-gray-700 font-medium mb-2">Identity Number</label>
+        <input
+          type="text"
+          formControlName="identityNumber"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+        <div *ngIf="accountForm.get('identityNumber')?.invalid && accountForm.get('identityNumber')?.touched" class="text-red-500 text-sm mt-1">
           Identity Number is required and should be less than 20 characters.
         </div>
       </div>
 
+      <!-- Date of Birth -->
       <div class="mb-4">
-        <label class="block text-gray-700">Date of Birth</label>
-        <input type="date" formControlName="dateOfBirth" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300" />
-        <div *ngIf="accountForm.get('dateOfBirth')?.invalid && accountForm.get('dateOfBirth')?.touched" class="text-red-500 text-sm">
+        <label class="block text-gray-700 font-medium mb-2">Date of Birth</label>
+        <input
+          type="date"
+          formControlName="dateOfBirth"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+        <div *ngIf="accountForm.get('dateOfBirth')?.invalid && accountForm.get('dateOfBirth')?.touched" class="text-red-500 text-sm mt-1">
           Date of Birth is required.
         </div>
       </div>
 
-      <button type="submit" [disabled]="isLoading" class="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        [disabled]="isLoading"
+        class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+      >
         {{ isLoading ? 'Creating...' : 'Create Account' }}
       </button>
     </form>
@@ -57,50 +83,83 @@
   <!-- Accounts Grid -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <!-- Account Card -->
-    <div *ngFor="let account of accounts" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl shadow-lg p-6 transform transition duration-300 hover:scale-105">
+    <div *ngFor="let account of accounts" class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-xl shadow-lg p-6 transform transition duration-300 hover:scale-105">
       <div class="flex justify-between items-center">
         <!-- Bank Logo -->
-        <img ngSrc="assets/banklogo.jpeg" alt="Bank Logo" class="w-12 h-12" width="50" height="50">
+        <img ngSrc="assets/banklogo.jpeg" alt="Bank Logo" class="w-12 h-12 rounded-full" width="50" height="50" />
         <!-- Account Type Icon -->
-        <svg *ngIf="account.accountType === 'Checking'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <!-- Checking Account Icon -->
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-3.582 8-8 8H11c-4.418 0-8-3.582-8-8V7c0-4.418 3.582-8 8-8h2c4.418 0 8 3.582 8 8v5z" />
+        <svg
+          *ngIf="account.accountType === 'Checking'"
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-3.582 8-8 8H11c-4.418 0-8-3.582-8-8V7c0-4.418 3.582-8 8-8h2c4.418 0 8 3.582 8 8v5z"
+          />
         </svg>
-        <svg *ngIf="account.accountType === 'Savings'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <!-- Savings Account Icon -->
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6" />
+        <svg
+          *ngIf="account.accountType === 'Savings'"
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6"
+          />
         </svg>
       </div>
 
+      <!-- Account Details -->
       <div class="mt-6">
         <h3 class="text-xl font-semibold">{{ getAccountType(account.accountNumber) }}</h3>
-        <p class="text-sm mt-1">Account Number: <span class="font-mono">{{account.accountNumber}}</span></p>
+        <p class="text-sm mt-1">Account Number: <span class="font-mono">{{ maskAccountNumber(account.accountNumber) }}</span></p>
         <p class="text-lg mt-2">Balance: \${{ account.balance.toLocaleString() }}</p>
       </div>
 
-      <!-- Navigate Button -->
+      <!-- View Transactions Button -->
       <div class="mt-4">
-        <a [routerLink]="['../transactions', account.id]" class="inline-block px-4 py-2 bg-white text-indigo-600 rounded hover:bg-gray-100">
-          View Account Transactions
+        <a
+          [routerLink]="['../transactions', account.id]"
+          class="inline-block px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+        >
+          View Transactions
         </a>
       </div>
-
     </div>
   </div>
 
   <!-- Pagination Controls -->
-  <div class="flex justify-center mt-6">
-    <button (click)="goToPreviousPage()" [disabled]="currentPage === 0 || isLoading" class="px-4 py-2 bg-gray-300 rounded mr-2 hover:bg-gray-400 disabled:opacity-50">
+  <div class="flex justify-center mt-8">
+    <button
+      (click)="goToPreviousPage()"
+      [disabled]="currentPage === 0 || isLoading"
+      class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg mr-2 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
       Previous
     </button>
-    <span class="px-4 py-2">Page {{ currentPage + 1 }}</span>
-    <button (click)="goToNextPage()" [disabled]="!hasMore || isLoading" class="px-4 py-2 bg-gray-300 rounded ml-2 hover:bg-gray-400 disabled:opacity-50">
+    <span class="px-4 py-2 text-gray-700">Page {{ currentPage + 1 }}</span>
+    <button
+      (click)="goToNextPage()"
+      [disabled]="!hasMore || isLoading"
+      class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg ml-2 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
       Next
     </button>
   </div>
 
   <!-- Loading Spinner -->
-  <div *ngIf="isLoading" class="flex justify-center mt-4">
-    <div class="loader"></div>
+  <div *ngIf="isLoading" class="flex justify-center mt-6">
+    <div class="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
   </div>
 </div>
