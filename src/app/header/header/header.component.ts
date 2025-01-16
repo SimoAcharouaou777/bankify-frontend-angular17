@@ -33,7 +33,14 @@ export class HeaderComponent implements OnInit{
     }
 
   getUserProfile(): void {
-    this.http.get('/api/user/profile').subscribe({
+      const token = this.authService.getToken();
+      if(!token) {
+        console.error('No access token found. User not authenticated');
+        return;
+      }
+    this.http.get('/api/user/profile', {
+      headers: { Authorization: `Bearer ${token}` },
+    }).subscribe({
       next: (data) => {
         this.user = data;
         this.profile = {...data};

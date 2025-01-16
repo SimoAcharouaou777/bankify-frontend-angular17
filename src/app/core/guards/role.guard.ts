@@ -6,7 +6,7 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
   const role = localStorage.getItem('role');
   const router = inject(Router);
 
-  if (role !== expectedRole) {
+  if (!role || role !== expectedRole) {
     router.navigate(['/login']);
     return false;
   }
