@@ -232,4 +232,56 @@
   <div *ngIf="isLoading" class="flex justify-center mt-8">
     <div class="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
   </div>
+
+  <!-- Add this after the loading spinner -->
+  <div class="mt-12 bg-white rounded-xl shadow-lg p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-semibold">Transaction Basket</h3>
+      <button
+        (click)="clearAllTransactions()"
+        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+      >
+        Clear All
+      </button>
+    </div>
+
+    <div *ngIf="basketError$ | async as error" class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+      {{ error }}
+    </div>
+
+    <div *ngFor="let transaction of basketTransactions$ | async" class="mb-4 p-4 bg-gray-50 rounded-lg">
+      <div class="flex justify-between items-center">
+        <div>
+          <h4 class="font-semibold" [ngClass]="{
+          'text-green-600': transaction.type === 'DEPOSIT',
+          'text-red-600': transaction.type === 'WITHDRAW',
+          'text-blue-600': transaction.type === 'TRANSFER'
+        }">
+            {{ transaction.type }}
+            <span class="text-sm text-gray-500 ml-2">#{{ transaction.id.slice(0, 8) }}</span>
+          </h4>
+          <p class="text-gray-600">Amount: \${{ transaction.amount | number }}</p>
+          <p *ngIf="transaction.accountId" class="text-sm text-gray-500">
+            Account: {{ transaction.accountId }}
+          </p>
+          <p *ngIf="transaction.fromAccountId" class="text-sm text-gray-500">
+            From: {{ transaction.fromAccountId }} → To: {{ transaction.toAccountId }}
+          </p>
+        </div>
+        <button
+          (click)="removeTransaction(transaction.id)"
+          class="text-red-600 hover:text-red-800"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <div class="mt-6 pt-4 border-t border-gray-200">
+      <div class="flex justify-between items-center">
+        <span class="font-semibold">Total Amount:</span>
+        <span class="text-xl font-bold">\${{ basketTotal$ | async | number }}</span>
+      </div>
+    </div>
+  </div>
 </div>

@@ -5,6 +5,7 @@ import {NgModule} from "@angular/core";
 import {roleGuard} from "./core/guards/role.guard";
 import {HomeComponent} from "./home/home.component";
 import {authGuard} from "./core/guards/auth.guard";
+import {StoreModule} from "@ngrx/store";
 
 
 export const routes: Routes = [
@@ -36,7 +37,10 @@ export const routes: Routes = [
 
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes),
+    StoreModule.forRoot({}),
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

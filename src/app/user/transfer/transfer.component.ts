@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {SidebarComponent} from "../sidebar/sidebar.component";
-import {NgForOf, NgIf} from "@angular/common";
+import {AsyncPipe, DecimalPipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import { v4 as uuidv4 } from 'uuid';
 import {
   AccountService,
   BankAccount,
@@ -9,6 +10,20 @@ import {
   TransferRequest
 } from "../../core/services/accounts/account.service";
 import {error} from "@angular/compiler-cli/src/transformers/util";
+import {Observable} from "rxjs";
+import {BasketTransaction} from "../../core/store/transactions/transaction.state";
+import {Store} from "@ngrx/store";
+import {
+  selectBasketError,
+  selectBasketTotal,
+  selectBasketTransactions
+} from "../../core/store/transactions/transaction.selectors";
+import {
+  addToBasket,
+  clearBasket,
+  removeFromBasket,
+  validateBasket
+} from "../../core/store/transactions/transaction.actions";
 
 @Component({
   selector: 'app-transfer',
@@ -17,7 +32,10 @@ import {error} from "@angular/compiler-cli/src/transformers/util";
     SidebarComponent,
     NgIf,
     ReactiveFormsModule,
-    NgForOf
+    NgForOf,
+    DecimalPipe,
+    AsyncPipe,
+    NgClass
   ],
   templateUrl: './transfer.component.html',
   styleUrl: './transfer.component.css'
@@ -27,15 +45,18 @@ export class TransferComponent implements OnInit{
   depositForm: FormGroup;
   withdrawForm: FormGroup;
   transferForm: FormGroup;
-
   successMessage: string = '';
   errorMessage: string = '';
   isLoading: boolean = false;
   userAccounts: BankAccount[] = [];
+  basketTransactions$: Observable<BasketTransaction[]>;
+  basketTotal$: Observable<number>;
+  basketError$: Observable<string | null>;
 
   constructor(
     private fb: FormBuilder,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private store: Store
   ) {
     this.depositForm = this.fb.group({
       accountId: ['', [Validators.required]],
@@ -52,51 +73,42 @@ export class TransferComponent implements OnInit{
       transactionType: ['CLASSIC', [Validators.required]],
       frequency: ['']
     });
+    this.basketTransactions$ = this.store.select(selectBasketTransactions);
+    this.basketTotal$ = this.store.select(selectBasketTotal);
+    this.basketError$ = this.store.select(selectBasketError);
   }
 
   get isPermanentTransfer(): boolean {
     return this.transferForm?.value.transactionType === 'PERMANENT';
   }
+  removeTransaction(transactionId: string): void {
+    this.store.dispatch(removeFromBasket({ transactionId }));
+  }
+
+  clearAllTransactions(): void {
+    this.store.dispatch(clearBasket());
+  }
+
   ngOnInit(): void {
     this.fetchUserAccounts();
   }
 
   onDeposit(): void {
-    if(this.depositForm.invalid) {
+    if (this.depositForm.invalid) {
       this.errorMessage = 'Please fill out the form correctly.';
       return;
     }
-    const transaction: TransactionRequest = {
-      accountId: Number(this.depositForm.value.accountId),
-      amount: Number(this.depositForm.value.amount)
+    const basketTransaction: BasketTransaction = {
+      id: uuidv4(),
+      type: 'DEPOSIT',
+      amount: Number(this.depositForm.value.amount),
+      accountId: this.depositForm.value.accountId,
+      status: 'PENDING'
     };
+    this.store.dispatch(addToBasket({transaction: basketTransaction}));
+    this.store.dispatch(validateBasket());
+    this.depositForm.reset();
 
-    if(transaction.amount <= 0) {
-      this.errorMessage = 'Please enter a valid amount.';
-      return;
-    }
-
-    this.isLoading = true;
-    this.successMessage = '';
-    this.errorMessage = '';
-
-    this.accountService.depositMoney(transaction).subscribe(
-      (response) => {
-        this.successMessage = 'Deposit successful.';
-        this.isLoading = false;
-        this.depositForm.reset();
-      },
-      (error) => {
-        if(error.status === 403) {
-          this.errorMessage = 'You do not have permission to perform this operation';
-        } else if (error.status === 400) {
-          this.errorMessage = error.error.message || 'Invalid account or amount.';
-        } else {
-          this.errorMessage = 'Failed to deposit money. Please try again.';
-        }
-        this.isLoading = false;
-      }
-    );
   }
 
   onWithdraw(): void {
@@ -105,26 +117,17 @@ export class TransferComponent implements OnInit{
       return;
     }
 
-    const transaction: TransactionRequest = {
-      accountId: Number(this.withdrawForm.value.accountId),
-      amount: Number(this.withdrawForm.value.amount)
+    const basketTransaction: BasketTransaction = {
+      id: uuidv4(),
+      type: 'WITHDRAW',
+      accountId: this.withdrawForm.value.accountId,
+      amount: Number(this.withdrawForm.value.amount),
+      status: 'PENDING'
     };
 
-    this.isLoading = true;
-    this.successMessage = '';
-    this.errorMessage = '';
+    this.store.dispatch(addToBasket({ transaction: basketTransaction }));
+    this.withdrawForm.reset();
 
-    this.accountService.withdrawMoney(transaction).subscribe(
-      (response) => {
-        this.successMessage = 'Money withdrawn successfully!';
-        this.isLoading = false;
-        this.withdrawForm.reset();
-      },
-      (error) => {
-        this.errorMessage = error?.error?.message || 'Failed to withdraw money. Please try again.';
-        this.isLoading = false;
-      }
-    );
   }
 
   onTransfer(): void {
@@ -146,30 +149,19 @@ export class TransferComponent implements OnInit{
       return;
     }
 
-    const transfer: TransferRequest = {
-      fromAccount: fromAccount,
-      toAccountNumber: toAccount,
+    const basketTransaction: BasketTransaction = {
+      id: uuidv4(),
+      type: 'TRANSFER',
       amount: Number(this.transferForm.value.amount),
-      transactionType: this.transferForm.value.transactionType,
-      frequency: this.transferForm.value.frequency
+      fromAccountId: this.transferForm.value.fromAccount,
+      toAccountId: this.transferForm.value.toAccountNumber,
+      frequency: this.transferForm.value.frequency,
+      status: 'PENDING'
     };
 
-    this.isLoading = true;
-    this.successMessage = '';
-    this.errorMessage = '';
+    this.store.dispatch(addToBasket({ transaction: basketTransaction }));
+    this.transferForm.reset({transactionType: 'CLASSIC'});
 
-    this.accountService.transferFunds(transfer).subscribe(
-      (response) => {
-        this.successMessage = 'Transfer successful!';
-        this.isLoading = false;
-        this.transferForm.reset({transactionType: 'CLASSIC'});
-        this.fetchUserAccounts();
-      },
-      (error) => {
-        this.errorMessage = error?.error?.message || 'Failed to transfer funds. Pleas try again.';
-        this.isLoading = false;
-      }
-    );
   }
 
   fetchUserAccounts(): void {
