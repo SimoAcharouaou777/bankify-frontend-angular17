@@ -21,30 +21,26 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
   if(!accessToken) {
     if (!refreshToken) {
       router.navigate(['/login']);
-      return throwError('No access token or refresh token found');
+      return throwError(() => new Error('No access token or refresh token found'));
     }
 
     return authService.refreshToken(refreshToken).pipe(
       switchMap((newToken) => {
         if(newToken) {
           req = req.clone({
-            setHeaders: {
-              Authorization: `Bearer ${newToken}`,
-            },
+            setHeaders: { Authorization: `Bearer ${newToken}`},
           });
           return next(req);
         } else {
           router.navigate(['/login']);
-          return throwError('Refresh token failed');
+          return throwError(() => new Error('Refresh token failed'));
         }
       })
     );
   }
 
   req = req.clone({
-    setHeaders: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    setHeaders: { Authorization: `Bearer ${accessToken}` },
   });
   return next(req);
 };

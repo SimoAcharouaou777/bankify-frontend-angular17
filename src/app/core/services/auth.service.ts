@@ -17,11 +17,13 @@ export class AuthService {
   constructor(private http: HttpClient) {
     const token = localStorage.getItem('accessToken');
     this.isAuthenticatedSubject.next(!!token);
+    this.ensureTokenValidity();
   }
 
   login(username: string, password: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json'});
     const body = { username, password};
+
     return this.http.post(`${this.apiUrl}/login`, body, { headers}).pipe(
       tap((response: any) => {
         if(response.accessToken){
@@ -33,7 +35,7 @@ export class AuthService {
       }),
       catchError(error => {
         console.error('Login failed', error);
-        return of(null);
+        return throwError(error);
       })
     );
   }
@@ -49,10 +51,15 @@ export class AuthService {
     );
   }
 
-  refreshToken(refreshToken: String): Observable<any> {
-    return this.http.post<{ accessToken : String}>('/api/auth/refresh', {refreshToken}).pipe(
-      map(response => response.accessToken),
+  refreshToken(refreshToken: string): Observable<string> {
+    return this.http.post<{ accessToken : string}>('/api/auth/refresh', {refreshToken}).pipe(
+      map((response) => {
+        localStorage.setItem('accessToken', response.accessToken);
+        return response.accessToken;
+      }),
       catchError((error) => {
+        console.error('Token refresh failed', error);
+        this.logout().subscribe();
         this.router.navigate(['/login']);
         return throwError(error);
       })
@@ -60,7 +67,12 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-     return this.http.post(`${this.apiUrl}/logout`, {}).pipe(
+    const refreshToken = this.getRefreshToken();
+    if(!refreshToken) {
+      console.error('No refresh token available');
+      return throwError(() => new Error('No refresh token available'));
+    }
+     return this.http.post(`${this.apiUrl}/logout`, {refreshToken}).pipe(
        tap(() => {
          localStorage.removeItem('accessToken');
          localStorage.removeItem('refreshToken');
@@ -73,7 +85,7 @@ export class AuthService {
           localStorage.removeItem('refreshToken');
           localStorage.removeItem('role');
           this.isAuthenticatedSubject.next(false);
-         return of(null);
+         return throwError(error);
        })
      );
   }
@@ -85,4 +97,22 @@ export class AuthService {
   getRefreshToken(): string | null {
     return localStorage.getItem('refreshToken');
   }
+
+  isTokenExpired(token: string): boolean {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const expiry = payload.exp * 1000;
+    return Date.now() > expiry;
+  }
+
+   ensureTokenValidity(): void {
+    const token = this.getToken();
+    const refreshToken = this.getRefreshToken();
+
+    if(token && this.isTokenExpired(token) && refreshToken) {
+      this.refreshToken(refreshToken).subscribe({
+        next: () => console.log('Token refreshed successfully'),
+        error: (error) => console.log('Failed to refresh token', error),
+      });
+    }
+   }
 }

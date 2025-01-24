@@ -10,8 +10,7 @@ import { basketReducer } from "../core/store/transactions/transaction.reducer";
   declarations: [],
   imports: [
     CommonModule,
-    UserRoutingModule,
-    StoreModule.forFeature('basket', basketReducer)
+    UserRoutingModule
   ],
 })
 export class UserModule { }

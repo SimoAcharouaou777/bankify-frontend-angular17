@@ -31,7 +31,14 @@ export class ProfileComponent implements OnInit{
   }
 
   getUserProfile(): void {
-    this.http.get('/api/user/profile').subscribe({
+    const token = localStorage.getItem('accessToken');
+    if(!token) {
+      console.error('Access token not found');
+      return
+    }
+    this.http.get('/api/user/profile', {
+      headers: { Authorization: `Bearer ${token}`},
+    }).subscribe({
       next: (data) => {
         this.user = data;
         this.profile = {...data};
@@ -47,6 +54,12 @@ export class ProfileComponent implements OnInit{
     this.isEditing = !this.isEditing;
   }
   onSubmit(): void {
+    const token = localStorage.getItem('accessToken');
+    if(!token) {
+      console.error('Access token not found');
+      return;
+    }
+
     const profileData = {
       firstName: this.profile.firstName,
       lastName: this.profile.lastName,
@@ -54,7 +67,9 @@ export class ProfileComponent implements OnInit{
       age: this.profile.age,
       identityNumber: this.profile.identityNumber
     };
-    this.http.put('/api/user/profile', profileData).subscribe({
+    this.http.put('/api/user/profile', profileData, {
+      headers: { Authorization: `Bearer ${token}` },
+    }).subscribe({
       next: (data) => {
         this.user = data;
         this.isEditing = false;

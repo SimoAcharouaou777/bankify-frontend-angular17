@@ -34,7 +34,7 @@ export class LoginComponent {
 
       this.authService.login(this.username, this.password).subscribe({
         next: (response) => {
-          if(response && response.accessToken){
+          if(response?.accessToken){
             this.successMessage = 'Login successful';
             this.errorMessage = '';
 
