@@ -13,7 +13,6 @@ import {TransactionEffects} from "../core/store/transactions/transaction.effects
   imports: [
     CommonModule,
     UserRoutingModule,
-    EffectsModule.forFeature([TransactionEffects]),
   ],
 })
 export class UserModule { }

@@ -1,7 +1,6 @@
-import { createReducer, on} from "@ngrx/store";
-import { BasketState,initialBasketState} from "./transaction.state";
+import { createReducer, on } from "@ngrx/store";
+import { BasketState, initialBasketState } from "./transaction.state";
 import * as TransactionActions from "./transaction.actions";
-import {state} from "@angular/animations";
 
 export const basketReducer = createReducer(
   initialBasketState,
@@ -29,7 +28,7 @@ export const basketReducer = createReducer(
   })),
   on(TransactionActions.progressTransaction, (state, { transactionId }) => {
     const updatedTransactions = state.transactions.map(t =>
-      t.id === transactionId ? { ...t, status: 'COMPLETED' as 'COMPLETED'} : t
+      t.id === transactionId ? { ...t, status: 'COMPLETED' as 'COMPLETED' } : t
     );
     return {
       ...state,
@@ -42,5 +41,15 @@ export const basketReducer = createReducer(
       ...state,
       transactions: updatedTransactions
     };
-  })
+  }),
+  on(TransactionActions.progressTransactionSuccess, (state, { transactionId }) => ({
+    ...state,
+    transactions: state.transactions.map(t =>
+      t.id === transactionId ? { ...t, status: 'COMPLETED'as 'COMPLETED' } : t
+    )
+  })),
+  on(TransactionActions.progressTransactionFailure, (state, { error }) => ({
+    ...state,
+    error: error.message || 'Transaction failed'
+  }))
 );

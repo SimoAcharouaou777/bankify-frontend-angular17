@@ -10,7 +10,7 @@ import {
   TransferRequest
 } from "../../core/services/accounts/account.service";
 import {error} from "@angular/compiler-cli/src/transformers/util";
-import {Observable} from "rxjs";
+import {Observable, take} from "rxjs";
 import {BasketTransaction} from "../../core/store/transactions/transaction.state";
 import {Store} from "@ngrx/store";
 import {
@@ -24,7 +24,7 @@ import {
   removeFromBasket,
   validateBasket,
   progressTransaction,
-  progressAllTransactions
+  progressAllTransactions, initiateProgressTransaction
 } from "../../core/store/transactions/transaction.actions";
 
 @Component({
@@ -92,7 +92,14 @@ export class TransferComponent implements OnInit{
   }
 
   onProgress(transactionId: string): void {
-    this.store.dispatch(progressTransaction({ transactionId }));
+    this.store.select(selectBasketTransactions).pipe(take(1)).subscribe((transactions) => {
+      const transaction = transactions.find(t => t.id === transactionId);
+      if(transaction) {
+        this.store.dispatch(initiateProgressTransaction({ transaction }));
+      } else {
+        console.error('Transaction not found:', transactionId);
+      }
+    });
   }
 
   onProgressAll(): void {
