@@ -13,3 +13,23 @@ export const removeFromBasket = createAction(
 
 export const clearBasket = createAction('[Basket] Clear Transactions');
 export const validateBasket = createAction('[Basket] Validate');
+
+
+export const progressTransaction = createAction(
+  '[Basket] Progress Transaction',
+  props<{ transactionId: string }>()
+);
+
+export const progressAllTransactions = createAction(
+  '[Basket] Progress All Transactions'
+);
+
+export const progressTransactionSuccess = createAction(
+  '[Basket] Progress Transaction Success',
+  props<{ transactionId: string; response: any }>()
+);
+
+export const progressTransactionFailure = createAction(
+  '[Basket] Progress Transaction Failure',
+  props<{ error: any}>()
+);

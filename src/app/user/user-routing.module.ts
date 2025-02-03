@@ -9,6 +9,8 @@ import {LoansComponent} from "./loans/loans.component";
 import {InvoicesComponent} from "./invoices/invoices.component";
 import {provideState} from "@ngrx/store";
 import {basketReducer} from "../core/store/transactions/transaction.reducer";
+import {EffectsModule} from "@ngrx/effects";
+import {TransactionEffects} from "../core/store/transactions/transaction.effects";
 
 export const routes: Routes = [
   {
@@ -27,7 +29,9 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [
+    RouterModule.forChild(routes),
+  ],
   exports: [RouterModule]
 })
 export class UserRoutingModule { }

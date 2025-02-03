@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { UserRoutingModule } from './user-routing.module';
 import { StoreModule} from "@ngrx/store";
 import { basketReducer } from "../core/store/transactions/transaction.reducer";
+import {EffectsModule} from "@ngrx/effects";
+import {TransactionEffects} from "../core/store/transactions/transaction.effects";
 
 
 
@@ -10,7 +12,8 @@ import { basketReducer } from "../core/store/transactions/transaction.reducer";
   declarations: [],
   imports: [
     CommonModule,
-    UserRoutingModule
+    UserRoutingModule,
+    EffectsModule.forFeature([TransactionEffects]),
   ],
 })
 export class UserModule { }

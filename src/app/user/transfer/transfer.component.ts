@@ -22,7 +22,9 @@ import {
   addToBasket,
   clearBasket,
   removeFromBasket,
-  validateBasket
+  validateBasket,
+  progressTransaction,
+  progressAllTransactions
 } from "../../core/store/transactions/transaction.actions";
 
 @Component({
@@ -87,6 +89,14 @@ export class TransferComponent implements OnInit{
 
   clearAllTransactions(): void {
     this.store.dispatch(clearBasket());
+  }
+
+  onProgress(transactionId: string): void {
+    this.store.dispatch(progressTransaction({ transactionId }));
+  }
+
+  onProgressAll(): void {
+    this.store.dispatch(progressAllTransactions());
   }
 
   ngOnInit(): void {
